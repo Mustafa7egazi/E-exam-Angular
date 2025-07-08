@@ -1,0 +1,28 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IExamList } from '../models/iexam-list';
+import { IExamForm } from '../models/iexam-form';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class Examservice {
+  baseUrl = 'http://localhost:5000/api/exam';
+  constructor(private http: HttpClient) {}
+  getExamList(): Observable<IExamList[]> {
+    return this.http.get<IExamList[]>(this.baseUrl);
+  }
+  getExamById(id: number): Observable<IExamList> {
+    return this.http.get<IExamList>(`${this.baseUrl}/${id}`);
+  }
+  addExam(exam: IExamForm): Observable<IExamForm> {
+    return this.http.post<IExamForm>(this.baseUrl, exam);
+  }
+  updateExam(id: number, exam: IExamForm): Observable<IExamForm> {
+    return this.http.put<IExamForm>(`${this.baseUrl}/${id}`, exam);
+  }
+  deleteExam(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}

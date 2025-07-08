@@ -6,7 +6,7 @@
         Manage exams, questions, and view student performance.
       </p>
     </div>
-    <button class="btn btn-primary d-flex align-items-center">
+    <button class="btn btn-primary d-flex align-items-center" routerLink="/admin/exam" routerLinkActive="active">
       <i class="fas fa-plus h-5 w-5 me-2"></i>
       Create Exam
     </button>
@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-3">
+    <!--<div class="col-12 col-md-6 col-lg-3">
       <div class="card shadow-sm border p-4">
         <div class="d-flex align-items-center">
           <div class="p-3 bg-orange-100 rounded-lg">
@@ -64,18 +64,14 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 
   <div class="card shadow-sm border mb-4">
     <div class="card-header bg-white border-bottom">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
-          <a
-            class="nav-link active d-flex align-items-center"
-            aria-current="page"
-            href="#"
-          >
+          <a class="nav-link active d-flex align-items-center" aria-current="page" href="#">
             <i class="fas fa-file-lines h-4 w-4 me-2"></i>
             <span>Exams</span>
           </a>
@@ -89,16 +85,18 @@
       </ul>
     </div>
     <div class="list-group list-group-flush">
+      @for (exam of exams; track exam.id) {
       <div class="list-group-item list-group-item-action p-4">
         <div class="d-flex justify-content-between align-items-center">
           <div class="flex-grow-1">
             <div class="d-flex align-items-center mb-2">
               <h3 class="h5 fw-semibold text-gray-900 mb-0 me-2">
-                Mathematics Final Exam
+                {{exam.name}}
               </h3>
-              <span class="badge bg-success-subtle">active</span>
+              <span class="badge bg-{{exam.isPublished?'success':'danger'}}-subtle">{{exam.isPublished?'':'Not '}}
+                active</span>
             </div>
-            <p class="text-muted mb-3">Mathematics</p>
+            <p class="text-muted mb-3">{{exam.subject}}</p>
             <div class="row g-3 text-sm text-muted">
               <div class="col-6 col-md-3">
                 <span class="fw-medium">Questions:</span> 50
@@ -116,114 +114,19 @@
             <p class="text-sm text-muted mt-2">Created: 12/15/2024</p>
           </div>
           <div class="d-flex align-items-center ms-3">
-            <button
-              class="btn btn-light btn-sm rounded-lg me-2"
-              title="View Results"
-            >
+            <button class="btn btn-light btn-sm rounded-lg me-2" title="View Results" (click)="displayExamDetails(exam.id)">
               <i class="fas fa-eye h-5 w-5"></i>
             </button>
-            <button
-              class="btn btn-light btn-sm rounded-lg me-2"
-              title="Edit Exam"
-            >
+            <button class="btn btn-light btn-sm rounded-lg me-2" title="Edit Exam">
               <i class="fas fa-pen h-5 w-5"></i>
             </button>
-            <button class="btn btn-light btn-sm rounded-lg" title="Delete Exam">
+            <button class="btn btn-light btn-sm rounded-lg" title="Delete Exam" (click)="deleteExam(exam.id)">
               <i class="fas fa-trash h-5 w-5"></i>
             </button>
           </div>
         </div>
       </div>
-      <div class="list-group-item list-group-item-action p-4">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="flex-grow-1">
-            <div class="d-flex align-items-center mb-2">
-              <h3 class="h5 fw-semibold text-gray-900 mb-0 me-2">
-                Physics Midterm
-              </h3>
-              <span class="badge bg-success-subtle">active</span>
-            </div>
-            <p class="text-muted mb-3">Physics</p>
-            <div class="row g-3 text-sm text-muted">
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Questions:</span> 40
-              </div>
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Duration:</span> 90m
-              </div>
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Attempts:</span> 18
-              </div>
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Avg Score:</span> 82%
-              </div>
-            </div>
-            <p class="text-sm text-muted mt-2">Created: 12/10/2024</p>
-          </div>
-          <div class="d-flex align-items-center ms-3">
-            <button
-              class="btn btn-light btn-sm rounded-lg me-2"
-              title="View Results"
-            >
-              <i class="fas fa-eye h-5 w-5"></i>
-            </button>
-            <button
-              class="btn btn-light btn-sm rounded-lg me-2"
-              title="Edit Exam"
-            >
-              <i class="fas fa-pen h-5 w-5"></i>
-            </button>
-            <button class="btn btn-light btn-sm rounded-lg" title="Delete Exam">
-              <i class="fas fa-trash h-5 w-5"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="list-group-item list-group-item-action p-4">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="flex-grow-1">
-            <div class="d-flex align-items-center mb-2">
-              <h3 class="h5 fw-semibold text-gray-900 mb-0 me-2">
-                Chemistry Quiz
-              </h3>
-              <span class="badge bg-warning-subtle">draft</span>
-            </div>
-            <p class="text-muted mb-3">Chemistry</p>
-            <div class="row g-3 text-sm text-muted">
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Questions:</span> 25
-              </div>
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Duration:</span> 45m
-              </div>
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Attempts:</span> 0
-              </div>
-              <div class="col-6 col-md-3">
-                <span class="fw-medium">Avg Score:</span> 0%
-              </div>
-            </div>
-            <p class="text-sm text-muted mt-2">Created: 12/18/2024</p>
-          </div>
-          <div class="d-flex align-items-center ms-3">
-            <button
-              class="btn btn-light btn-sm rounded-lg me-2"
-              title="View Results"
-            >
-              <i class="fas fa-eye h-5 w-5"></i>
-            </button>
-            <button
-              class="btn btn-light btn-sm rounded-lg me-2"
-              title="Edit Exam"
-            >
-              <i class="fas fa-pen h-5 w-5"></i>
-            </button>
-            <button class="btn btn-light btn-sm rounded-lg" title="Delete Exam">
-              <i class="fas fa-trash h-5 w-5"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      }
     </div>
   </div>
 </div>
