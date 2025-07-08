@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Navbar } from "./layout/navbar/navbar";
-import { Footer } from "./layout/footer/footer";
+import { Navbar } from './layout/navbar/navbar';
+import { Footer } from './layout/footer/footer';
+import { AdminAuth } from './pages/admin-auth/admin-auth';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Footer],
+  imports: [Navbar, Footer, AdminAuth],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected title = 'E_exam_Angular';

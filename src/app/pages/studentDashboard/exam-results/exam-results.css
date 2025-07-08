@@ -1,0 +1,151 @@
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-subtle-bg: #e0f2fe;
+  --success: #16a34a;
+  --success-subtle-bg: #dcfce7;
+  --success-dark: #166534;
+  --danger: #dc2626;
+  --danger-subtle-bg: #fee2e2;
+  --danger-dark: #991b1b;
+  --secondary-text: #4b5563;
+  --dark-text: #111827;
+  --light-bg: #f9fafb;
+  --light-border: #f3f4f6;
+  --gray-bg: #e5e7eb;
+  --outline-secondary-color: #4b5563;
+  --outline-secondary-border: #d1d5db;
+  --outline-secondary-hover-bg: #f9fafb;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.hover-text-primary-dark:hover {
+  color: var(--primary-hover);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-green-dark {
+  color: var(--success-dark);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.text-danger-dark {
+  color: var(--danger-dark);
+}
+
+.text-secondary {
+  color: var(--secondary-text);
+}
+
+.text-dark {
+  color: var(--dark-text);
+}
+
+.bg-light {
+  background-color: var(--light-bg);
+}
+
+.bg-primary-subtle {
+  background-color: var(--primary-subtle-bg);
+}
+
+.bg-green-subtle {
+  background-color: var(--success-subtle-bg);
+  color: var(--success-dark);
+}
+
+.bg-red-subtle {
+  background-color: var(--danger-subtle-bg);
+  color: var(--danger-dark);
+}
+
+.border-light-subtle {
+  border-color: var(--light-border) !important;
+}
+
+.icon-size-4 {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-size-5 {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-size-lg {
+  width: 40px;
+  height: 40px;
+}
+
+.icon-circle-lg {
+  width: 80px;
+  height: 80px;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
+.card.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.transition-colors {
+  transition-property: background-color, border-color, color, fill, stroke,
+    transform, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.btn-outline-secondary {
+  color: var(--outline-secondary-color);
+  border-color: var(--outline-secondary-border);
+  background-color: transparent;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--outline-secondary-hover-bg);
+  color: var(--outline-secondary-color);
+  border-color: var(--outline-secondary-border);
+}
+
+.progress {
+  background-color: var(--gray-bg);
+}
+
+.progress-bar.bg-success {
+  background-color: var(--success);
+}
+
+.progress-bar.bg-primary {
+  background-color: var(--primary);
+}

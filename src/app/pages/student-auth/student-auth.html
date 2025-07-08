@@ -1,0 +1,239 @@
+<div
+  class="min-vh-100 bg-gradient-br-light d-flex align-items-center justify-content-center p-4"
+>
+  <div class="w-100" style="max-width: 28rem">
+    <a
+      href="#"
+      class="btn btn-link text-secondary text-decoration-none d-inline-flex align-items-center gap-2 mb-4"
+    >
+      <i class="fas fa-arrow-left fa-sm me-2"></i> Back to Home
+    </a>
+    <div class="card rounded-lg border-0 card-custom-bg shadow-2xl-custom">
+      <div class="card-body p-4 text-center pb-2">
+        <div
+          class="mx-auto mb-4 p-3 rounded-circle d-flex align-items-center justify-content-center bg-gradient-blue-start"
+          style="width: 4rem; height: 4rem"
+        >
+          <i class="fas fa-book-open fa-2x text-white"></i>
+        </div>
+        <h3 class="card-title fw-bold text-dark mb-2">Student Portal</h3>
+        <p class="card-text text-muted-dark">Sign in to your account</p>
+      </div>
+      <div class="card-body p-4 pt-0">
+        <ul
+          class="nav nav-pills nav-justified mb-4 bg-light rounded-md p-1"
+          id="myTab"
+          role="tablist"
+        >
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active rounded-sm fw-medium"
+              id="login-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#login"
+              type="button"
+              role="tab"
+              aria-controls="login"
+              aria-selected="true"
+            >
+              Login
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link rounded-sm fw-medium"
+              id="register-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#register"
+              type="button"
+              role="tab"
+              aria-controls="register"
+              aria-selected="false"
+            >
+              Register
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div
+            class="tab-pane fade show active"
+            id="login"
+            role="tabpanel"
+            aria-labelledby="login-tab"
+          >
+            <form class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="email" class="form-label text-muted-dark"
+                  >Email</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-envelope input-icon-left"></i>
+                  <input
+                    type="email"
+                    class="form-control form-control-with-icon"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                  />
+                  <div class="invalid-feedback">Please enter your email.</div>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label for="password" class="form-label text-muted-dark"
+                  >Password</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-lock input-icon-left"></i>
+                  <input
+                    type="password"
+                    class="form-control form-control-with-icon"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your password.
+                  </div>
+                </div>
+              </div>
+              <button
+                class="btn btn-gradient-blue text-white w-100 fw-semibold py-2 rounded-lg"
+                type="submit"
+              >
+                Sign In
+              </button>
+            </form>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="register"
+            role="tabpanel"
+            aria-labelledby="register-tab"
+          >
+            <form class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="first-name" class="form-label text-muted-dark"
+                  >First Name</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-user input-icon-left"></i>
+                  <input
+                    type="text"
+                    class="form-control form-control-with-icon"
+                    id="first-name"
+                    name="first-name"
+                    placeholder="Enter your first name"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your first name.
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="last-name" class="form-label text-muted-dark"
+                  >Last Name</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-user input-icon-left"></i>
+                  <input
+                    type="text"
+                    class="form-control form-control-with-icon"
+                    id="last-name"
+                    name="last-name"
+                    placeholder="Enter your last name"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your last name.
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="register-email" class="form-label text-muted-dark"
+                  >Email</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-envelope input-icon-left"></i>
+                  <input
+                    type="email"
+                    class="form-control form-control-with-icon"
+                    id="register-email"
+                    name="register-email"
+                    placeholder="Enter your email"
+                    required
+                  />
+                  <div class="invalid-feedback">Please enter your email.</div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label
+                  for="register-password"
+                  class="form-label text-muted-dark"
+                  >Password</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-lock input-icon-left"></i>
+                  <input
+                    type="password"
+                    class="form-control form-control-with-icon"
+                    id="register-password"
+                    name="register-password"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <div class="invalid-feedback">Please enter a password.</div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="confirm-password" class="form-label text-muted-dark"
+                  >Confirm Password</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-lock input-icon-left"></i>
+                  <input
+                    type="password"
+                    class="form-control form-control-with-icon"
+                    id="confirm-password"
+                    name="confirm-password"
+                    placeholder="Confirm your password"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please confirm your password.
+                  </div>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label for="birthday-date" class="form-label text-muted-dark"
+                  >Birthday Date</label
+                >
+                <div class="position-relative">
+                  <i class="fas fa-calendar-alt input-icon-left"></i>
+                  <input
+                    type="date"
+                    class="form-control form-control-with-icon"
+                    id="birthday-date"
+                    name="birthday-date"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your birthday date.
+                  </div>
+                </div>
+              </div>
+              <button
+                class="btn btn-gradient-blue text-white w-100 fw-semibold py-2 rounded-lg"
+                type="submit"
+              >
+                Register
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

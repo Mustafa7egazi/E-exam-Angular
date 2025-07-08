@@ -1,0 +1,300 @@
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-subtle-bg: #eff6ff;
+  --primary-emphasis-text: #1e3a8a;
+
+  --success: #22c55e;
+  --success-dark: #16a34a;
+
+  --warning: #f59e0b;
+  --warning-subtle-bg: #fef3c7;
+  --warning-dark: #b45309;
+
+  --danger: #dc2626;
+
+  --text-base: #374151;
+  --text-muted: #6b7280;
+  --text-dark: #1f2937;
+
+  --bg-body: #f9fafb;
+  --bg-card: #ffffff;
+  --bg-light-hover: #f3f4f6;
+  --bg-medium-light: #e5e7eb;
+  --bg-dark-light: #d1d5db;
+
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  --rounded-sm: 0.25rem;
+  --rounded-md: 0.375rem;
+  --rounded-lg: 0.5rem;
+  --rounded-xl: 0.75rem;
+  --rounded-xxl: 1rem;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: var(--bg-body);
+}
+
+.min-vh-100 {
+  min-height: 100vh;
+  background-color: var(--bg-body);
+}
+
+.text-dark {
+  color: var(--text-dark);
+}
+.text-secondary {
+  color: var(--text-muted);
+}
+.text-danger {
+  color: var(--danger);
+}
+.text-success {
+  color: var(--success-dark);
+}
+.text-warning {
+  color: var(--warning);
+}
+
+header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  z-index: 1020;
+}
+
+.icon-size-4 {
+  width: 1rem;
+  height: 1rem;
+}
+
+.icon-size-5 {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--rounded-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+}
+
+.questions-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.question-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--rounded-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid transparent;
+}
+
+.question-btn.answered {
+}
+
+.question-btn.flagged {
+}
+
+.question-btn.unanswered {
+  background-color: var(--bg-medium-light);
+  color: var(--text-muted);
+  border-color: var(--bg-medium-light);
+}
+
+.question-btn.unanswered:hover {
+  background-color: var(--bg-dark-light);
+  border-color: var(--bg-dark-light);
+  color: var(--text-dark);
+}
+
+.question-btn.active {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+.status-indicator {
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--rounded-sm);
+}
+
+.bg-gray-200 {
+  background-color: var(--bg-medium-light);
+}
+
+.flag-btn {
+  background-color: var(--bg-medium-light);
+  color: var(--text-muted);
+  border: 1px solid var(--bg-medium-light);
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+  padding: var(--spacing-sm);
+}
+
+.flag-btn:hover:not(.flagged) {
+  background-color: var(--bg-dark-light);
+  border-color: var(--bg-dark-light);
+  color: var(--text-dark);
+}
+
+.flag-btn.flagged {
+  background-color: var(--warning-subtle-bg);
+  color: var(--warning);
+  border-color: var(--warning);
+}
+
+.option-label {
+  border: 1px solid var(--border-medium);
+  border-radius: var(--rounded-lg);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  padding: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.option-label:hover:not(.selected) {
+  border-color: var(--primary-hover);
+  background-color: var(--bg-light-hover);
+}
+
+.option-label.selected {
+  border-color: var(--primary);
+  background-color: var(--primary-subtle-bg);
+  color: var(--primary-emphasis-text);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.option-label .form-check-input {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0;
+  margin-right: 0;
+  border-color: var(--border-medium);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+.option-label span {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.option-label.selected span {
+  color: var(--primary-emphasis-text);
+}
+
+.modal-content {
+  border-radius: var(--rounded-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-sm);
+}
+
+.modal-header {
+  padding-bottom: var(--spacing-sm);
+}
+
+.modal-body {
+  padding-top: var(--spacing-sm);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--primary);
+  --bs-btn-hover-bg: var(--primary-hover);
+  --bs-btn-active-bg: var(--primary-hover);
+  --bs-btn-border-color: var(--primary);
+  --bs-btn-hover-border-color: var(--primary-hover);
+  --bs-btn-active-border-color: var(--primary-hover);
+  --bs-btn-color: white;
+  border-radius: var(--rounded-lg);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--success);
+  --bs-btn-hover-bg: var(--success-dark);
+  --bs-btn-active-bg: var(--success-dark);
+  --bs-btn-border-color: var(--success);
+  --bs-btn-hover-border-color: var(--success-dark);
+  --bs-btn-active-border-color: var(--success-dark);
+  --bs-btn-color: white;
+  border-radius: var(--rounded-lg);
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--text-muted);
+  --bs-btn-border-color: var(--border-medium);
+  --bs-btn-hover-bg: var(--bg-light-hover);
+  --bs-btn-hover-border-color: var(--border-medium);
+  --bs-btn-active-bg: var(--bg-light-hover);
+  --bs-btn-active-border-color: var(--border-medium);
+  --bs-btn-disabled-color: var(--text-muted);
+  border-radius: var(--rounded-lg);
+}
+
+.btn-light {
+  --bs-btn-bg: var(--bg-medium-light);
+  --bs-btn-hover-bg: var(--bg-dark-light);
+  --bs-btn-active-bg: var(--bg-dark-light);
+  --bs-btn-color: var(--text-muted);
+  --bs-btn-border-color: var(--bg-medium-light);
+  --bs-btn-hover-border-color: var(--bg-dark-light);
+  --bs-btn-active-border-color: var(--bg-dark-light);
+  border-radius: var(--rounded-lg);
+}
+
+.bg-primary-subtle {
+  background-color: var(--primary-subtle-bg);
+}
+
+.text-primary-emphasis {
+  color: var(--primary-emphasis-text);
+}
+
+.bg-warning-subtle {
+  background-color: var(--warning-subtle-bg);
+}
+
+.option-label .form-check-input + span {
+  margin-left: var(--spacing-md);
+}
+
+.container.py-5 {
+  padding-top: var(--spacing-xxl);
+  padding-bottom: var(--spacing-xxl);
+}

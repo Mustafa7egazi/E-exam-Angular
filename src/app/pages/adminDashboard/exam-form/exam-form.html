@@ -1,0 +1,233 @@
+<div class="container mt-4">
+  <div class="mb-4">
+    <a href="#" class="back-to-dashboard">
+      <i class="fas fa-arrow-left me-2"></i>
+      Back to Dashboard
+    </a>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div>
+        <h1 class="h3 fw-bold text-dark">Create New Exam</h1>
+        <p class="text-muted mt-2">
+          Set up your exam details and add questions
+        </p>
+      </div>
+      <div class="d-flex gap-3">
+        <button
+          class="btn btn-outline-secondary d-flex align-items-center animate-btn"
+        >
+          <i class="fas fa-eye me-2"></i>
+          Preview
+        </button>
+        <button class="btn btn-primary d-flex align-items-center animate-btn">
+          <i class="fas fa-save me-2"></i>
+          Save Exam
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom">
+      <ul class="nav custom-nav-tabs" id="examTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="examDetails-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#examDetails"
+            type="button"
+            role="tab"
+            aria-controls="examDetails"
+            aria-selected="true"
+          >
+            <i class="fas fa-info-circle"></i>
+            Exam Details
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="questions-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#questions"
+            type="button"
+            role="tab"
+            aria-controls="questions"
+            aria-selected="false"
+          >
+            <i class="fas fa-question-circle"></i>
+            Questions <span class="badge bg-primary ms-2">0</span>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="settings-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#settings"
+            type="button"
+            role="tab"
+            aria-controls="settings"
+            aria-selected="false"
+          >
+            <i class="fas fa-cog"></i>
+            Settings
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="card-body">
+      <div class="tab-content" id="examTabContent">
+        <div
+          class="tab-pane fade show active"
+          id="examDetails"
+          role="tabpanel"
+          aria-labelledby="examDetails-tab"
+        >
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="examTitle" class="form-label">
+                Exam Title <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="examTitle"
+                placeholder="Enter exam title"
+                required
+              />
+              <div class="form-text">
+                Give your exam a clear, descriptive title
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="subject" class="form-label">
+                Subject <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="subject"
+                placeholder="Enter subject"
+                required
+              />
+            </div>
+
+            <div class="col-12">
+              <label for="description" class="form-label"> Description </label>
+              <textarea
+                class="form-control"
+                id="description"
+                rows="3"
+                placeholder="Enter exam description"
+              ></textarea>
+              <div class="form-text">
+                This will be visible to students before they start the exam
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="instructions" class="form-label">
+                Instructions
+              </label>
+              <textarea
+                class="form-control"
+                id="instructions"
+                rows="4"
+                placeholder="Enter instructions for students"
+              ></textarea>
+            </div>
+
+            <div class="col-md-4">
+              <label for="duration" class="form-label">
+                Duration (minutes) <span class="required">*</span>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                id="duration"
+                min="1"
+                max="300"
+                value="60"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="questions"
+          role="tabpanel"
+          aria-labelledby="questions-tab"
+        >
+          <div class="empty-state">
+            <i class="fas fa-question-circle empty-state-icon"></i>
+            <p class="empty-state-text">No questions added yet</p>
+            <button class="btn btn-primary btn-lg animate-btn">
+              <i class="fas fa-plus me-2"></i> Add Question
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="settings"
+          role="tabpanel"
+          aria-labelledby="settings-tab"
+        >
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Exam settings will appear here. You can configure options like
+            shuffling questions, time limits, and access controls.
+          </div>
+
+          <div class="row g-4 mt-3">
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="shuffleQuestions"
+                />
+                <label class="form-check-label" for="shuffleQuestions">
+                  Shuffle Questions
+                </label>
+              </div>
+              <div class="form-text">
+                Randomize question order for each student
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="showResults"
+                />
+                <label class="form-check-label" for="showResults">
+                  Show Results Immediately
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="timeLimit"
+                  checked
+                />
+                <label class="form-check-label" for="timeLimit">
+                  Enforce Time Limit
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

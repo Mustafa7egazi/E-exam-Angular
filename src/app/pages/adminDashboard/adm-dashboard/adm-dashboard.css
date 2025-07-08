@@ -1,0 +1,154 @@
+:root {
+  --bs-blue-100: #e0f2fe;
+  --bs-blue-600: #2563eb;
+  --bs-emerald-100: #d1fae5;
+  --bs-emerald-600: #059669;
+  --bs-purple-100: #f3e8ff;
+  --bs-purple-600: #9333ea;
+  --bs-orange-100: #fff7ed;
+  --bs-orange-600: #ea580c;
+  --bs-green-100: #d1fae5;
+  --bs-green-800: #166534;
+  --bs-yellow-100: #fefce8;
+  --bs-yellow-800: #92400e;
+  --bs-red-600: #dc2626;
+
+  --bs-gray-900: #1a202c;
+  --bs-gray-600: #4a5568;
+  --bs-gray-500: #718096;
+  --bs-gray-200: #edf2f7;
+  --bs-gray-50: #f9fafb;
+}
+
+body {
+  background-color: var(--bs-gray-50);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.text-gray-900 {
+  color: var(--bs-gray-900);
+}
+
+.text-gray-600 {
+  color: var(--bs-gray-600);
+}
+
+.text-gray-500 {
+  color: var(--bs-gray-500);
+}
+
+.text-blue-600 {
+  color: var(--bs-blue-600);
+}
+
+.text-emerald-600 {
+  color: var(--bs-emerald-600);
+}
+
+.text-purple-600 {
+  color: var(--bs-purple-600);
+}
+
+.text-orange-600 {
+  color: var(--bs-orange-600);
+}
+
+/* Background colors for stat cards */
+.bg-blue-100 {
+  background-color: var(--bs-blue-100);
+}
+
+.bg-emerald-100 {
+  background-color: var(--bs-emerald-100);
+}
+
+.bg-purple-100 {
+  background-color: var(--bs-purple-100);
+}
+
+.bg-orange-100 {
+  background-color: var(--bs-orange-100);
+}
+
+.badge.bg-success-subtle {
+  background-color: var(--bs-green-100);
+  color: var(--bs-green-800);
+}
+
+.badge.bg-warning-subtle {
+  background-color: var(--bs-yellow-100);
+  color: var(--bs-yellow-800);
+}
+
+.card {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  border-color: var(--bs-gray-200);
+}
+
+.card-header {
+  border-bottom: none;
+}
+
+.nav-tabs .nav-link {
+  border-bottom: 2px solid transparent;
+  color: var(--bs-gray-500);
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--bs-blue-600);
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--bs-blue-600);
+  border-color: var(--bs-gray-200);
+}
+
+.list-group-item-action:hover {
+  background-color: var(--bs-gray-50);
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-light {
+  color: var(--bs-gray-600);
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-light:hover {
+  color: var(--bs-blue-600);
+  background-color: var(--bs-blue-100);
+  border-color: var(--bs-blue-100);
+}
+
+.btn-light[title="Edit Exam"]:hover {
+  color: var(--bs-emerald-600);
+  background-color: var(--bs-emerald-100);
+  border-color: var(--bs-emerald-100);
+}
+
+.btn-light[title="Delete Exam"]:hover {
+  color: var(--bs-red-600);
+  background-color: #fee2e2;
+  border-color: #fee2e2;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}

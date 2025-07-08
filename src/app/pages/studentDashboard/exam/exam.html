@@ -1,0 +1,249 @@
+<div class="min-vh-100 bg-light">
+  <header
+    class="bg-white shadow-sm border-bottom border-light-subtle sticky-top"
+  >
+    <div class="container-fluid px-4 px-md-6 px-lg-8">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <div>
+          <h1 class="fs-4 fw-semibold text-dark mb-0">
+            Mathematics Final Exam
+          </h1>
+          <p class="text-secondary mb-0">Question 1 of 10</p>
+        </div>
+        <div class="d-flex align-items-center gap-4">
+          <div class="d-flex align-items-center gap-2 text-danger">
+            <i data-lucide="clock" class="icon-size-5"></i>
+            <span class="font-monospace fs-5 fw-semibold">01:59:59</span>
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary d-flex align-items-center"
+            data-bs-toggle="modal"
+            data-bs-target="#submitExamModal"
+          >
+            <i data-lucide="send" class="icon-size-4 me-2"></i>
+            Submit Exam
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container px-4 px-md-6 px-lg-8 py-5">
+    <div class="row g-4">
+      <div class="col-12 col-lg-3">
+        <div
+          class="card shadow-sm rounded-xl border border-light-subtle p-4 sticky-top"
+          style="top: 100px"
+        >
+          <h3 class="fs-5 fw-semibold text-dark mb-4">Question Navigator</h3>
+
+          <div class="space-y-3 mb-4">
+            <div
+              class="d-flex align-items-center justify-content-between small"
+            >
+              <span class="text-secondary">Answered:</span>
+              <span class="fw-semibold text-success">0/10</span>
+            </div>
+            <div
+              class="d-flex align-items-center justify-content-between small"
+            >
+              <span class="text-secondary">Flagged:</span>
+              <span class="fw-semibold text-warning">0</span>
+            </div>
+          </div>
+
+          <div class="d-grid questions-grid gap-2">
+            <button type="button" class="btn question-btn active btn-primary">
+              1
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              2
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              3
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              4
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              5
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              6
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              7
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              8
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              9
+            </button>
+            <button type="button" class="btn question-btn unanswered btn-light">
+              10
+            </button>
+          </div>
+
+          <div class="mt-4 small space-y-2">
+            <div class="d-flex align-items-center gap-2">
+              <div class="status-indicator bg-success"></div>
+              <span class="text-secondary">Answered</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <div class="status-indicator bg-warning"></div>
+              <span class="text-secondary">Flagged</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <div class="status-indicator bg-gray-200"></div>
+              <span class="text-secondary">Unanswered</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-9">
+        <div class="card shadow-sm rounded-xl border border-light-subtle p-5">
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <h2 class="fs-4 fw-semibold text-dark mb-0">Question 1</h2>
+            <button
+              type="button"
+              class="btn btn-light p-2 rounded-lg text-secondary flag-btn"
+            >
+              <i data-lucide="flag" class="icon-size-5"></i>
+            </button>
+          </div>
+
+          <div class="mb-4">
+            <p class="fs-5 text-dark lh-base">
+              What is the derivative of x² + 3x + 2?
+            </p>
+          </div>
+
+          <div class="d-grid gap-3 mb-5">
+            <label
+              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
+            >
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  name="question-1"
+                  value="2x + 3"
+                  class="form-check-input mt-0 me-3"
+                  id="option1"
+                />
+                <span class="ms-1 text-dark fw-medium">A. 2x + 3</span>
+              </div>
+            </label>
+            <label
+              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
+            >
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  name="question-1"
+                  value="x + 3"
+                  class="form-check-input mt-0 me-3"
+                  id="option2"
+                />
+                <span class="ms-1 text-dark fw-medium">B. x + 3</span>
+              </div>
+            </label>
+            <label
+              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
+            >
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  name="question-1"
+                  value="2x + 2"
+                  class="form-check-input mt-0 me-3"
+                  id="option3"
+                />
+                <span class="ms-1 text-dark fw-medium">C. 2x + 2</span>
+              </div>
+            </label>
+            <label
+              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
+            >
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  name="question-1"
+                  value="x² + 3"
+                  class="form-check-input mt-0 me-3"
+                  id="option4"
+                />
+                <span class="ms-1 text-dark fw-medium">D. x² + 3</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button
+              type="button"
+              class="btn btn-outline-secondary d-flex align-items-center px-4 py-2"
+              disabled
+            >
+              <i data-lucide="chevron-left" class="icon-size-4 me-2"></i>
+              Previous
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary d-flex align-items-center px-4 py-2"
+            >
+              Next
+              <i data-lucide="chevron-right" class="icon-size-4 ms-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="submitExamModal"
+  tabindex="-1"
+  aria-labelledby="submitExamModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-xl p-3">
+      <div class="modal-header border-0 pb-0">
+        <h5
+          class="modal-title fs-5 fw-semibold text-dark"
+          id="submitExamModalLabel"
+        >
+          Submit Exam
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body pt-0">
+        <p class="text-secondary mb-4">
+          Are you sure you want to submit your exam? You have answered 0 out of
+          10 questions.
+        </p>
+        <div class="d-flex gap-3">
+          <button
+            type="button"
+            class="btn btn-outline-secondary flex-grow-1 px-4 py-2"
+            data-bs-dismiss="modal"
+          >
+            Continue Exam
+          </button>
+          <button type="button" class="btn btn-primary flex-grow-1 px-4 py-2">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.bg-gradient-br-light {
+  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff, #ede9fe);
+}
+.card-custom-bg {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(4px);
+}
+.shadow-2xl-custom {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+.bg-gradient-purple-start {
+  background: linear-gradient(to bottom right, #a855f7, #9333ea) !important;
+}
+.btn-gradient-purple {
+  background: linear-gradient(to right, #a855f7, #9333ea) !important;
+  border: none;
+  transition: all 0.3s ease;
+}
+.btn-gradient-purple:hover {
+  background: linear-gradient(to right, #9333ea, #7c3aed) !important;
+}
+.input-icon-left {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.625rem;
+  z-index: 2;
+  color: #9ca3af;
+}
+.form-control-with-icon {
+  padding-left: 2.5rem !important;
+}
+.nav-pills .nav-link.active {
+  color: black;
+  background-color: white;
+}
