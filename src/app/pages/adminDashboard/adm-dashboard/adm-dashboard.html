@@ -13,7 +13,7 @@
   </div>
 
   <div class="row g-4 mb-4">
-    <div class="col-12 col-md-6 col-lg-3">
+    <div class="col-12 col-md-6 col-lg-4">
       <div class="card shadow-sm border p-4">
         <div class="d-flex align-items-center">
           <div class="p-3 bg-blue-100 rounded-lg">
@@ -21,12 +21,12 @@
           </div>
           <div class="ms-4">
             <p class="text-sm font-medium text-muted">Total Exams</p>
-            <p class="fs-4 fw-bold text-gray-900">15</p>
+            <p class="fs-4 fw-bold text-gray-900">{{totalExams}}</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-3">
+    <div class="col-12 col-md-6 col-lg-4">
       <div class="card shadow-sm border p-4">
         <div class="d-flex align-items-center">
           <div class="p-3 bg-emerald-100 rounded-lg">
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-3">
+    <div class="col-12 col-md-6 col-lg-4">
       <div class="card shadow-sm border p-4">
         <div class="d-flex align-items-center">
           <div class="p-3 bg-purple-100 rounded-lg">
@@ -99,10 +99,10 @@
             <p class="text-muted mb-3">{{exam.subject}}</p>
             <div class="row g-3 text-sm text-muted">
               <div class="col-6 col-md-3">
-                <span class="fw-medium">Questions:</span> 50
+                <span class="fw-medium">Questions:</span> {{exam.questionsCount}}
               </div>
               <div class="col-6 col-md-3">
-                <span class="fw-medium">Duration:</span> 120m
+                <span class="fw-medium">Duration:</span> {{exam.durationInMinites}}m
               </div>
               <div class="col-6 col-md-3">
                 <span class="fw-medium">Attempts:</span> 25
@@ -114,14 +114,19 @@
             <p class="text-sm text-muted mt-2">Created: 12/15/2024</p>
           </div>
           <div class="d-flex align-items-center ms-3">
-            <button class="btn btn-light btn-sm rounded-lg me-2" title="View Results" (click)="displayExamDetails(exam.id)">
-              <i class="fas fa-eye h-5 w-5"></i>
+            <button class="btn btn-light btn-sm rounded-circle me-2" title="View Results"
+              (click)="displayExamDetails(exam.id)">
+              <i class="fas fa-eye h-5 w-5 fs-5"></i>
             </button>
-            <button class="btn btn-light btn-sm rounded-lg me-2" title="Edit Exam">
-              <i class="fas fa-pen h-5 w-5"></i>
+            <button class="btn btn-light btn-sm rounded-circle me-2" title="Edit Exam">
+              <i class="fas fa-pen h-5 w-5 fs-5 text-primary"></i>
             </button>
-            <button class="btn btn-light btn-sm rounded-lg" title="Delete Exam" (click)="deleteExam(exam.id)">
-              <i class="fas fa-trash h-5 w-5"></i>
+            <button class="btn btn-light btn-sm rounded-circle" title="Toggle Publish State" (click)="deleteExam(exam)">
+              @if (exam.isPublished) {
+              <i class="fas fa-toggle-on fs-4 h-5 w-5 text-success"></i>
+              } @else {
+              <i class="fas fa-toggle-off fs-4 h-5 w-5 text-danger"></i>
+              }
             </button>
           </div>
         </div>

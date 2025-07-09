@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class AdmDashboard implements OnInit, OnDestroy {
   exams: IExamList[] = [];
+  totalExams: number = 0;
   private subscription!: Subscription;
   constructor(
     private examService: Examservice,
@@ -23,10 +24,18 @@ export class AdmDashboard implements OnInit, OnDestroy {
       next: (data) => {
         this.exams = data;
         this.cdr.detectChanges();
-        console.log(this.exams);
       },
       error: (error) => {
         console.error('Error fetching exams:', error);
+      },
+    });
+    this.subscription = this.examService.getTotalExams().subscribe({
+      next: (data) => {
+        this.totalExams = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error fetching total exams:', error);
       },
     });
   }
@@ -45,10 +54,11 @@ export class AdmDashboard implements OnInit, OnDestroy {
       },
     });
   }
-  deleteExam(examId: number) {
-    this.examService.deleteExam(examId).subscribe({
+  deleteExam(exam: IExamList) {
+    this.examService.deleteExam(exam.id).subscribe({
       next: (response) => {
-        console.log(response);
+        exam.isPublished = !exam.isPublished;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.log('Can not Get Exam');

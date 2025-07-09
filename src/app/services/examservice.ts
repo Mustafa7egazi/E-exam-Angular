@@ -9,7 +9,10 @@ import { IExamForm } from '../models/iexam-form';
 })
 export class Examservice {
   baseUrl = 'http://localhost:5000/api/exam';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+  getTotalExams(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/count`);
+  }
   getExamList(): Observable<IExamList[]> {
     return this.http.get<IExamList[]>(this.baseUrl);
   }

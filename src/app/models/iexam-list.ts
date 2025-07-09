@@ -4,4 +4,6 @@ export interface IExamList {
   totalMarks: string;
   subject: string;
   isPublished: boolean;
+  questionsCount: number;
+  durationInMinites: number;
 }
