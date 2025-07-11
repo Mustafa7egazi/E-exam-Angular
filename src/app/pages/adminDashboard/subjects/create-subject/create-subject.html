@@ -1,0 +1,67 @@
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+              <i class="fas fa-plus-circle me-2"></i>
+              Create New Subject
+            </h4>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="cancel()">
+              <i class="fas fa-times me-1"></i>
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body p-4">
+          <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+            <!-- Subject Name -->
+            <div class="mb-4">
+              <label for="name" class="form-label fw-semibold">
+                Subject Name <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-control"
+                placeholder="Enter subject name..."
+                [class.is-invalid]="subjectForm.get('name')?.invalid && subjectForm.get('name')?.touched"
+              >
+              <div class="invalid-feedback" *ngIf="subjectForm.get('name')?.invalid && subjectForm.get('name')?.touched">
+                <span *ngIf="subjectForm.get('name')?.errors?.['required']">Subject name is required.</span>
+                <span *ngIf="subjectForm.get('name')?.errors?.['minlength']">Subject name must be at least 2 characters.</span>
+                <span *ngIf="subjectForm.get('name')?.errors?.['maxlength']">Subject name cannot exceed 50 characters.</span>
+              </div>
+              <div class="form-text">Enter a clear and descriptive name for the subject.</div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-end gap-3">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="cancel()"
+                [disabled]="isLoading"
+              >
+                <i class="fas fa-times me-1"></i>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="subjectForm.invalid || isLoading"
+              >
+                <i class="fas fa-save me-1" *ngIf="!isLoading"></i>
+                <span class="spinner-border spinner-border-sm me-1" *ngIf="isLoading"></span>
+                {{ isLoading ? 'Creating...' : 'Create Subject' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

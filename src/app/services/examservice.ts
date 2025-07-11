@@ -8,7 +8,7 @@ import { IExamForm } from '../models/iexam-form';
   providedIn: 'root',
 })
 export class Examservice {
-  baseUrl = 'http://localhost:5000/api/exam';
+  baseUrl = 'https://localhost:7138/api/exam';
   constructor(private http: HttpClient) { }
   getTotalExams(): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/count`);

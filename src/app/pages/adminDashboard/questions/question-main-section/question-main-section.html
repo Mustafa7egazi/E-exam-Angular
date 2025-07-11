@@ -1,0 +1,245 @@
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-1">
+            <i class="fas fa-question-circle me-2 text-primary"></i>
+            Questions Management
+          </h2>
+          <p class="text-muted mb-0">Manage and organize your exam questions</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button
+            class="btn btn-success"
+            (click)="createNewSubject()"
+          >
+            <i class="fas fa-plus me-2"></i>
+            Add Subject
+          </button>
+          <button
+            class="btn btn-primary"
+            (click)="createNewQuestion()"
+          >
+            <i class="fas fa-plus me-2"></i>
+            Add New Question
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="fas fa-filter me-2"></i>
+            Filters & Search
+          </h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="filterForm" class="row g-3">
+            <!-- Search Term -->
+            <div class="col-md-4">
+              <label for="searchTerm" class="form-label">Search Questions</label>
+              <input
+                type="text"
+                id="searchTerm"
+                formControlName="searchTerm"
+                class="form-control"
+                placeholder="Search by question title or subject..."
+              >
+            </div>
+
+            <!-- Subject Filter -->
+            <div class="col-md-2">
+              <label for="subjectId" class="form-label">Subject</label>
+              <select id="subjectId" formControlName="subjectId" class="form-select">
+                <option value="">All Subjects</option>
+                <option *ngFor="let subject of subjects; trackBy: trackBySubjectId" [value]="subject.id">
+                  {{ subject.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Difficulty Filter -->
+            <div class="col-md-2">
+              <label for="difficulty" class="form-label">Difficulty</label>
+              <select id="difficulty" formControlName="difficulty" class="form-select">
+                <option value="">All Levels</option>
+                <option *ngFor="let level of difficultyLevels" [value]="level.value">
+                  {{ level.label }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Type Filter -->
+            <div class="col-md-2">
+              <label for="type" class="form-label">Type</label>
+              <select id="type" formControlName="type" class="form-select">
+                <option value="">All Types</option>
+                <option *ngFor="let type of questionTypes" [value]="type.value">
+                  {{ type.label }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="col-md-2 d-flex align-items-end">
+              <button
+                type="button"
+                class="btn btn-outline-secondary w-100"
+                (click)="clearFilters()"
+              >
+                <i class="fas fa-times me-1"></i>
+                Clear Filters
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="row">
+    <div class="col-12 text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading questions...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="row">
+    <div class="col-12">
+      <div class="alert alert-danger" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ errorMessage }}
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm ms-3"
+          (click)="loadQuestions()"
+        >
+          <i class="fas fa-redo me-1"></i>
+          Retry
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions Table -->
+  <div *ngIf="!isLoading && !errorMessage" class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="fas fa-list me-2"></i>
+              Questions ({{ filteredQuestions.length }})
+            </h5>
+            <div class="text-muted">
+              Showing {{ filteredQuestions.length }} of {{ questions.length }} questions
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <!-- No Questions Found -->
+          <div *ngIf="filteredQuestions.length === 0" class="text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No questions found</h5>
+            <p class="text-muted">
+              {{ questions.length === 0 ? 'No questions have been created yet.' : 'No questions match your current filters.' }}
+            </p>
+            <button
+              *ngIf="questions.length === 0"
+              class="btn btn-primary"
+              (click)="createNewQuestion()"
+            >
+              <i class="fas fa-plus me-2"></i>
+              Create Your First Question
+            </button>
+          </div>
+
+          <!-- Questions Table -->
+          <div *ngIf="filteredQuestions.length > 0" class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" class="border-0">Question</th>
+                  <th scope="col" class="border-0">Subject</th>
+                  <th scope="col" class="border-0">Type</th>
+                  <th scope="col" class="border-0">Difficulty</th>
+                  <th scope="col" class="border-0">Score</th>
+                  <th scope="col" class="border-0">Options</th>
+                  <th scope="col" class="border-0 text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let question of filteredQuestions" class="question-row">
+                  <td>
+                    <div class="question-title">
+                      <strong>{{ question.title }}</strong>
+                    </div>
+                    <small class="text-muted">
+                      ID: {{ question.id }}
+                    </small>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary">{{ question.subjectName }}</span>
+                  </td>
+                  <td>
+                    <span [class]="getTypeClass(question.type)">
+                      {{ question.type === 0 ? 'Multiple Choice' : 'True/False' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [class]="getDifficultyClass(question.difficulty)">
+                      {{ question.difficulty === 0 ? 'Easy' : question.difficulty === 1 ? 'Medium' : 'Hard' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-info">{{ question.score }} pts</span>
+                  </td>
+                  <td>
+                    <span class="text-muted">
+                      {{ question.options.length }} options
+                      <span class="text-success ms-1">
+                        ({{ getCorrectOptionsCount(question) }} correct)
+                      </span>
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group" role="group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary btn-sm"
+                        (click)="editQuestion(question.id)"
+                        title="Edit Question"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        (click)="deleteQuestion(question.id)"
+                        title="Delete Question"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
