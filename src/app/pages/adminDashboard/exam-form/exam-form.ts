@@ -4,11 +4,21 @@ import { IExamList } from '../../../models/Exam/iexam-list';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { questionsService } from '../../../services/questions-service';
-import { IQuestion, QuestionType, DifficultyLevel } from '../../../models/Questions/IQuestions';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  IQuestion,
+  QuestionType,
+  DifficultyLevel,
+} from '../../../models/Questions/IQuestions';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { SubjectsService } from '../../../services/subjects.service';
 import { ISubject } from '../../../models/Subject/ISubject';
 import { Router } from '@angular/router';
+import { IExamForm } from '../../../models/Exam/iexam-form';
 
 @Component({
   selector: 'app-exam-form',
@@ -62,12 +72,20 @@ export class ExamForm implements OnInit, OnDestroy {
     this.examForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
       subjectId: [null, Validators.required],
-      duration: [60, [Validators.required, Validators.min(1), Validators.max(300)]],
-      isPublished: [false]
+      duration: [
+        60,
+        [Validators.required, Validators.min(1), Validators.max(300)],
+      ],
+      isPublished: [false],
+      // totalMarks: [0, [Validators.required, Validators.min(0)]],
+      passMark: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
     });
 
     // Listen for subject changes to load questions
-    this.examForm.get('subjectId')?.valueChanges.subscribe(subjectId => {
+    this.examForm.get('subjectId')?.valueChanges.subscribe((subjectId) => {
       if (subjectId) {
         this.loadQuestionsBySubject(subjectId);
       } else {
@@ -92,7 +110,7 @@ export class ExamForm implements OnInit, OnDestroy {
         console.error('Error loading subjects:', error);
         this.isLoadingSubjects = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -100,24 +118,28 @@ export class ExamForm implements OnInit, OnDestroy {
     this.isLoadingQuestions = true;
     this.cdr.markForCheck();
 
-    this.subscription = this.questionService.filterQuestions(subjectId).subscribe({
-      next: (questions: IQuestion[]) => {
-        this.availableQuestions = questions;
-        this.isLoadingQuestions = false;
-        this.cdr.markForCheck();
-        console.log('Loaded questions:', questions);
-      },
-      error: (error) => {
-        console.error('Error loading questions:', error);
-        this.isLoadingQuestions = false;
-        this.cdr.markForCheck();
-      }
-    });
+    this.subscription = this.questionService
+      .filterQuestions(subjectId)
+      .subscribe({
+        next: (questions: IQuestion[]) => {
+          this.availableQuestions = questions;
+          this.isLoadingQuestions = false;
+          this.cdr.markForCheck();
+          console.log('Loaded questions:', questions);
+        },
+        error: (error) => {
+          console.error('Error loading questions:', error);
+          this.isLoadingQuestions = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   addQuestionToExam(question: IQuestion): void {
     // Check if question is already selected
-    const isAlreadySelected = this.selectedQuestions.some(q => q.id === question.id);
+    const isAlreadySelected = this.selectedQuestions.some(
+      (q) => q.id === question.id
+    );
 
     if (!isAlreadySelected) {
       this.selectedQuestions.push(question);
@@ -129,13 +151,15 @@ export class ExamForm implements OnInit, OnDestroy {
   }
 
   removeQuestionFromExam(questionId: number): void {
-    this.selectedQuestions = this.selectedQuestions.filter(q => q.id !== questionId);
+    this.selectedQuestions = this.selectedQuestions.filter(
+      (q) => q.id !== questionId
+    );
     this.refreshQuestionsCount();
     console.log('Removed question from exam:', questionId);
   }
 
   isQuestionSelected(questionId: number): boolean {
-    return this.selectedQuestions.some(q => q.id === questionId);
+    return this.selectedQuestions.some((q) => q.id === questionId);
   }
 
   getSelectedQuestionsCount(): number {
@@ -143,7 +167,10 @@ export class ExamForm implements OnInit, OnDestroy {
   }
 
   getTotalScore(): number {
-    return this.selectedQuestions.reduce((total, question) => total + question.score, 0);
+    return this.selectedQuestions.reduce(
+      (total, question) => total + question.score,
+      0
+    );
   }
 
   // Method to refresh the questions count badge
@@ -152,21 +179,21 @@ export class ExamForm implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    console.log('Form submission started');
-    console.log('Form valid:', this.examForm.valid);
-    console.log('Selected questions:', this.selectedQuestions.length);
-
     if (this.examForm.valid && this.selectedQuestions.length > 0) {
       this.isSubmitting = true;
       this.cdr.markForCheck();
 
       const formValue = this.examForm.value;
-      const examData = {
-        title: formValue.title,
+      const examData: IExamForm = {
+        id: 0,
+        name: formValue.title,
         subjectId: formValue.subjectId,
-        duration: formValue.duration,
+        durationInMinites: formValue.duration,
         isPublished: formValue.isPublished,
-        questionIds: this.selectedQuestions.map(q => q.id)
+        passMark: Math.floor(this.getTotalScore() * (formValue.passMark / 100)),
+        totalMarks: this.getTotalScore(),
+        teacherId: 1,
+        examQuestions: this.selectedQuestions.map((q) => q.id),
       };
 
       console.log('Creating exam with data:', examData);
@@ -174,37 +201,26 @@ export class ExamForm implements OnInit, OnDestroy {
       // Simulate API call with proper error handling
       try {
         // TODO: Replace with actual exam creation service call
-        // this.examService.createExam(examData).subscribe({
-        //   next: (response) => {
-        //     console.log('Exam created successfully:', response);
-        //     this.isSubmitting = false;
-        //     this.cdr.markForCheck();
-        //     this.router.navigate(['/admin/exams']);
-        //   },
-        //   error: (error) => {
-        //     console.error('Error creating exam:', error);
-        //     this.isSubmitting = false;
-        //     this.cdr.markForCheck();
-        //     alert('Failed to create exam. Please try again.');
-        //   }
-        // });
-
-        // For now, just simulate success
-        setTimeout(() => {
-          console.log('Exam creation simulation completed');
-          this.isSubmitting = false;
-          this.cdr.markForCheck();
-          alert('Exam created successfully! (This is a simulation)');
-          this.router.navigate(['/admin/exams']);
-        }, 2000);
-
+        this.examService.addExam(examData).subscribe({
+          next: (response) => {
+            console.log('Exam created successfully:', response);
+            this.isSubmitting = false;
+            this.cdr.markForCheck();
+            this.router.navigate(['/admin/dashboard']);
+          },
+          error: (error) => {
+            console.error('Error creating exam:', error);
+            this.isSubmitting = false;
+            this.cdr.markForCheck();
+            alert('Failed to create exam. Please try again.');
+          },
+        });
       } catch (error) {
         console.error('Error in form submission:', error);
         this.isSubmitting = false;
         this.cdr.markForCheck();
         alert('An error occurred while creating the exam. Please try again.');
       }
-
     } else {
       console.log('Form validation failed');
       this.markFormGroupTouched();
@@ -226,6 +242,6 @@ export class ExamForm implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-    this.router.navigate(['/admin/exams']);
+    this.router.navigate(['/admin/dashboard']);
   }
 }

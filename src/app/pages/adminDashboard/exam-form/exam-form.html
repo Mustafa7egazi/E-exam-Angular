@@ -12,11 +12,8 @@
         </p>
       </div>
       <div class="d-flex gap-3">
-        <button
-          type="button"
-          class="btn btn-outline-secondary d-flex align-items-center animate-btn"
-          (click)="cancel()"
-        >
+        <button type="button" class="btn btn-outline-secondary d-flex align-items-center animate-btn"
+          (click)="cancel()">
           <i class="fas fa-times me-2"></i>
           Cancel
         </button>
@@ -29,31 +26,15 @@
       <div class="card-header bg-white border-bottom">
         <ul class="nav custom-nav-tabs" id="examTabs" role="tablist">
           <li class="nav-item" role="presentation">
-            <button
-              class="nav-link active"
-              id="examDetails-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#examDetails"
-              type="button"
-              role="tab"
-              aria-controls="examDetails"
-              aria-selected="true"
-            >
+            <button class="nav-link active" id="examDetails-tab" data-bs-toggle="tab" data-bs-target="#examDetails"
+              type="button" role="tab" aria-controls="examDetails" aria-selected="true">
               <i class="fas fa-info-circle"></i>
               Exam Details
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="questions-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#questions"
-              type="button"
-              role="tab"
-              aria-controls="questions"
-              aria-selected="false"
-            >
+            <button class="nav-link" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button"
+              role="tab" aria-controls="questions" aria-selected="false">
               <i class="fas fa-question-circle"></i>
               Questions <span class="badge bg-primary ms-2">{{ getSelectedQuestionsCount() }}</span>
             </button>
@@ -62,28 +43,19 @@
       </div>
       <div class="card-body">
         <div class="tab-content" id="examTabContent">
-          <div
-            class="tab-pane fade show active"
-            id="examDetails"
-            role="tabpanel"
-            aria-labelledby="examDetails-tab"
-          >
+          <div class="tab-pane fade show active" id="examDetails" role="tabpanel" aria-labelledby="examDetails-tab">
             <div class="row g-4">
               <div class="col-md-6">
                 <label for="examTitle" class="form-label">
                   Exam Title <span class="required">*</span>
                 </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="examTitle"
-                  formControlName="title"
+                <input type="text" class="form-control" id="examTitle" formControlName="title"
                   placeholder="Enter exam title"
-                  [class.is-invalid]="examForm.get('title')?.invalid && examForm.get('title')?.touched"
-                />
+                  [class.is-invalid]="examForm.get('title')?.invalid && examForm.get('title')?.touched" />
                 <div class="invalid-feedback" *ngIf="examForm.get('title')?.invalid && examForm.get('title')?.touched">
                   <span *ngIf="examForm.get('title')?.errors?.['required']">Exam title is required.</span>
-                  <span *ngIf="examForm.get('title')?.errors?.['minlength']">Exam title must be at least 5 characters.</span>
+                  <span *ngIf="examForm.get('title')?.errors?.['minlength']">Exam title must be at least 5
+                    characters.</span>
                 </div>
                 <div class="form-text">
                   Give your exam a clear, descriptive title
@@ -94,19 +66,16 @@
                 <label for="subject" class="form-label">
                   Subject <span class="required">*</span>
                 </label>
-                <select
-                  class="form-select"
-                  id="subject"
-                  formControlName="subjectId"
+                <select class="form-select" id="subject" formControlName="subjectId"
                   [class.is-invalid]="examForm.get('subjectId')?.invalid && examForm.get('subjectId')?.touched"
-                  [disabled]="isLoadingSubjects"
-                >
+                  [disabled]="isLoadingSubjects">
                   <option value="">Select subject</option>
                   <option *ngFor="let subject of subjects" [value]="subject.id">
                     {{ subject.name }}
                   </option>
                 </select>
-                <div class="invalid-feedback" *ngIf="examForm.get('subjectId')?.invalid && examForm.get('subjectId')?.touched">
+                <div class="invalid-feedback"
+                  *ngIf="examForm.get('subjectId')?.invalid && examForm.get('subjectId')?.touched">
                   Please select a subject.
                 </div>
                 <div class="form-text" *ngIf="isLoadingSubjects">
@@ -119,16 +88,10 @@
                 <label for="duration" class="form-label">
                   Duration (minutes) <span class="required">*</span>
                 </label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="duration"
-                  formControlName="duration"
-                  min="1"
-                  max="300"
-                  [class.is-invalid]="examForm.get('duration')?.invalid && examForm.get('duration')?.touched"
-                />
-                <div class="invalid-feedback" *ngIf="examForm.get('duration')?.invalid && examForm.get('duration')?.touched">
+                <input type="number" class="form-control" id="duration" formControlName="duration" min="1" max="300"
+                  [class.is-invalid]="examForm.get('duration')?.invalid && examForm.get('duration')?.touched" />
+                <div class="invalid-feedback"
+                  *ngIf="examForm.get('duration')?.invalid && examForm.get('duration')?.touched">
                   <span *ngIf="examForm.get('duration')?.errors?.['required']">Duration is required.</span>
                   <span *ngIf="examForm.get('duration')?.errors?.['min']">Duration must be at least 1 minute.</span>
                   <span *ngIf="examForm.get('duration')?.errors?.['max']">Duration cannot exceed 300 minutes.</span>
@@ -136,13 +99,19 @@
               </div>
 
               <div class="col-md-4">
+                <label for="passMark" class="form-label">
+                  Pass Mark In %<span class="required">*</span>
+                </label>
+                <input type="number" class="form-control" id="passMark" formControlName="passMark" min="0" max="100"
+                  [class.is-invalid]="examForm.get('passMark')?.invalid && examForm.get('passMark')?.touched" />
+                <div class="invalid-feedback"
+                  *ngIf="examForm.get('passMark')?.invalid && examForm.get('passMark')?.touched">
+                  <span *ngIf="examForm.get('passMark')?.errors?.['required']">Pass mark is required.</span>
+                </div>
+              </div>
+              <div class="col-md-4">
                 <div class="form-check form-switch mt-4 pt-3">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="isPublished"
-                    formControlName="isPublished"
-                  />
+                  <input class="form-check-input" type="checkbox" id="isPublished" formControlName="isPublished" />
                   <label class="form-check-label" for="isPublished">
                     Publish Exam
                   </label>
@@ -164,12 +133,7 @@
             </div>
           </div>
 
-          <div
-            class="tab-pane fade"
-            id="questions"
-            role="tabpanel"
-            aria-labelledby="questions-tab"
-          >
+          <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
             <!-- Loading State -->
             <div *ngIf="isLoadingQuestions" class="text-center py-4">
               <div class="spinner-border text-primary" role="status">
@@ -219,19 +183,15 @@
                               <span>
                                 <i class="fas fa-layer-group me-1"></i>
                                 {{ question.difficulty === DifficultyLevel.Easy ? 'Easy' :
-                                    question.difficulty === DifficultyLevel.Medium ? 'Medium' : 'Hard' }}
+                                question.difficulty === DifficultyLevel.Medium ? 'Medium' : 'Hard' }}
                               </span>
                             </div>
                           </div>
                           <div class="col-md-4 text-end">
-                            <button
-                              type="button"
-                              class="btn btn-sm"
+                            <button type="button" class="btn btn-sm"
                               [class.btn-success]="!isQuestionSelected(question.id)"
                               [class.btn-outline-secondary]="isQuestionSelected(question.id)"
-                              (click)="addQuestionToExam(question)"
-                              [disabled]="isQuestionSelected(question.id)"
-                            >
+                              (click)="addQuestionToExam(question)" [disabled]="isQuestionSelected(question.id)">
                               <i class="fas fa-plus me-1" *ngIf="!isQuestionSelected(question.id)"></i>
                               <i class="fas fa-check me-1" *ngIf="isQuestionSelected(question.id)"></i>
                               {{ isQuestionSelected(question.id) ? 'Added' : 'Add' }}
@@ -274,16 +234,13 @@
                               <span>
                                 <i class="fas fa-layer-group me-1"></i>
                                 {{ question.difficulty === DifficultyLevel.Easy ? 'Easy' :
-                                    question.difficulty === DifficultyLevel.Medium ? 'Medium' : 'Hard' }}
+                                question.difficulty === DifficultyLevel.Medium ? 'Medium' : 'Hard' }}
                               </span>
                             </div>
                           </div>
                           <div class="col-md-3 text-end">
-                            <button
-                              type="button"
-                              class="btn btn-outline-danger btn-sm"
-                              (click)="removeQuestionFromExam(question.id)"
-                            >
+                            <button type="button" class="btn btn-outline-danger btn-sm"
+                              (click)="removeQuestionFromExam(question.id)">
                               <i class="fas fa-times me-1"></i>
                               Remove
                             </button>
@@ -318,20 +275,12 @@
             </p>
           </div>
           <div class="d-flex gap-3">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="cancel()"
-              [disabled]="isSubmitting"
-            >
+            <button type="button" class="btn btn-outline-dark" (click)="cancel()" [disabled]="isSubmitting">
               <i class="fas fa-times me-2"></i>
               Cancel
             </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="examForm.invalid || isSubmitting || selectedQuestions.length === 0"
-            >
+            <button type="submit" class="btn btn-outline-success"
+              [disabled]="examForm.invalid || isSubmitting || selectedQuestions.length === 0">
               <i class="fas fa-save me-2" *ngIf="!isSubmitting"></i>
               <span class="spinner-border spinner-border-sm me-2" *ngIf="isSubmitting"></span>
               {{ isSubmitting ? 'Creating Exam...' : 'Create Exam' }}
