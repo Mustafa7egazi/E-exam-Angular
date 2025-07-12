@@ -8,7 +8,7 @@
     </div>
 
     <div class="row g-4 mb-5">
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-4">
         <div class="card shadow-sm rounded-xl border border-light-subtle">
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
@@ -21,14 +21,14 @@
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Total Exams</p>
-                <p class="fs-3 fw-bold text-dark mb-0">12</p>
+                <p class="fs-3 fw-bold text-dark mb-0">{{availableStudentExams.length}}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-4">
         <div class="card shadow-sm rounded-xl border border-light-subtle">
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
@@ -41,14 +41,14 @@
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Completed</p>
-                <p class="fs-3 fw-bold text-dark mb-0">8</p>
+                <p class="fs-3 fw-bold text-dark mb-0">{{takenExams.length}}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-4">
         <div class="card shadow-sm rounded-xl border border-light-subtle">
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
@@ -61,14 +61,14 @@
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Pending</p>
-                <p class="fs-3 fw-bold text-dark mb-0">2</p>
+                <p class="fs-3 fw-bold text-dark mb-0">{{pendingExams}}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <!-- <div class="col-12 col-md-6 col-lg-3">
         <div class="card shadow-sm rounded-xl border border-light-subtle">
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
@@ -86,7 +86,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="row g-4 justify-content-center">
@@ -97,34 +97,31 @@
           </div>
           <div class="card-body p-4">
             <div class="d-grid gap-3">
-              <div
-                class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100"
-              >
+
+             
+               @for (exam of availableStudentExams; track exam.id) {
+                <div class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="flex-grow-1">
                     <div class="d-flex align-items-center mb-2">
                       <i data-lucide="play" class="text-success exam-icon"></i>
                       <h3 class="fs-6 fw-semibold text-dark mb-0">
-                        Mathematics Final Exam
+                       {{exam.name}}
                       </h3>
-                      <span
-                        class="badge rounded-pill bg-success-subtle text-success ms-3"
-                        >available</span
-                      >
+                      @if (exam.isPublished) {
+                        <span class="badge rounded-pill bg-success-subtle text-success ms-3">available</span>
+                      }
                     </div>
-                    <div
-                      class="d-flex flex-wrap align-items-center gap-3 text-sm text-secondary"
-                    >
+                    <div class="d-flex flex-wrap align-items-center gap-3 text-sm text-secondary">
                       <span class="d-flex align-items-center">
                         <i data-lucide="book-open" class="detail-icon"></i>
-                        Mathematics
+                       {{exam.subject}}
                       </span>
                       <span class="d-flex align-items-center">
                         <i data-lucide="clock" class="detail-icon"></i>
-                        120 min
+                        {{exam.durationInMinites}} min
                       </span>
-                      <span>50 questions</span>
-                      <span>Due: Feb 15, 2024</span>
+                      <span>{{exam.questionsCount}} questions</span>
                     </div>
                   </div>
                   <div class="ms-3">
@@ -132,46 +129,9 @@
                   </div>
                 </div>
               </div>
-
-              <div
-                class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100"
-              >
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="flex-grow-1">
-                    <div class="d-flex align-items-center mb-2">
-                      <i data-lucide="play" class="text-success exam-icon"></i>
-                      <h3 class="fs-6 fw-semibold text-dark mb-0">
-                        Physics Midterm
-                      </h3>
-                      <span
-                        class="badge rounded-pill bg-success-subtle text-success ms-3"
-                        >available</span
-                      >
-                    </div>
-                    <div
-                      class="d-flex flex-wrap align-items-center gap-3 text-sm text-secondary"
-                    >
-                      <span class="d-flex align-items-center">
-                        <i data-lucide="book-open" class="detail-icon"></i>
-                        Physics
-                      </span>
-                      <span class="d-flex align-items-center">
-                        <i data-lucide="clock" class="detail-icon"></i>
-                        90 min
-                      </span>
-                      <span>40 questions</span>
-                      <span>Due: Feb 20, 2024</span>
-                    </div>
-                  </div>
-                  <div class="ms-3">
-                    <a href="/exam/2" class="btn btn-primary">Start Exam</a>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100"
-              >
+              }
+     
+              <!-- <div class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="flex-grow-1">
                     <div class="d-flex align-items-center mb-2">
@@ -208,7 +168,7 @@
                     >
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
