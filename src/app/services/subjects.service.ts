@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import { ISubject } from '../models/Subject/ISubject';
+import { environment } from '../enviroment/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubjectsService {
-
-  private baseUrl = 'https://localhost:7138/api/Subject';
+  private baseUrl = `${environment.apiBaseUrl}${environment.endpoints.subject}`;
 
   constructor(private http: HttpClient) {}
 

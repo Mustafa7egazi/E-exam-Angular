@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Examservice } from '../../../services/examservice';
-import { IExamList } from '../../../models/iexam-list';
+import { IExamList } from '../../../models/Exam/iexam-list';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 

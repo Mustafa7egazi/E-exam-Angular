@@ -1,13 +1,28 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { questionsService } from '../../../../services/questions-service';
 import { SubjectsService } from '../../../../services/subjects.service';
 import { IQuestion } from '../../../../models/Questions/IQuestions';
 import { ICreateQuestion } from '../../../../models/Questions/icreate-question';
 import { ICreateOption } from '../../../../models/Option/icreate-option';
-import { QuestionType, DifficultyLevel } from '../../../../models/Questions/IQuestions';
+import {
+  QuestionType,
+  DifficultyLevel,
+} from '../../../../models/Questions/IQuestions';
 import { ISubject } from '../../../../models/Subject/ISubject';
 import { Subscription } from 'rxjs';
 
@@ -16,15 +31,19 @@ import { Subscription } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './edit-question.html',
   styleUrl: './edit-question.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditQuestionComponent implements OnInit, OnDestroy {
   questionForm!: FormGroup;
   isLoading: boolean = false;
   questionId: number = 0;
   question: IQuestion | null = null;
-  questionTypes = Object.values(QuestionType).filter(value => typeof value === 'string');
-  difficultyLevels = Object.values(DifficultyLevel).filter(value => typeof value === 'string');
+  questionTypes = Object.values(QuestionType).filter(
+    (value) => typeof value === 'string'
+  );
+  difficultyLevels = Object.values(DifficultyLevel).filter(
+    (value) => typeof value === 'string'
+  );
 
   // Expose enums for template use
   QuestionType = QuestionType;
@@ -66,7 +85,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error loading subjects:', error);
-        }
+        },
       })
     );
   }
@@ -88,7 +107,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
           alert('Failed to load question. Please try again.');
           this.router.navigate(['/admin/questions']);
-        }
+        },
       })
     );
   }
@@ -100,7 +119,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
       type: [QuestionType.MultipleChoice, Validators.required],
       difficulty: [DifficultyLevel.Easy, Validators.required],
       subjectId: [null, Validators.required],
-      options: this.fb.array([])
+      options: this.fb.array([]),
     });
   }
 
@@ -116,14 +135,14 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
       score: question.score,
       type: question.type,
       difficulty: question.difficulty,
-      subjectId: question.subjectId
+      subjectId: question.subjectId,
     });
 
     // Add options
-    question.options.forEach(option => {
+    question.options.forEach((option) => {
       const optionGroup = this.fb.group({
         title: [option.title, Validators.required],
-        isCorrect: [option.isCorrect]
+        isCorrect: [option.isCorrect],
       });
       this.optionsArray.push(optionGroup);
     });
@@ -136,7 +155,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   addOption(): void {
     const option = this.fb.group({
       title: ['', Validators.required],
-      isCorrect: [false]
+      isCorrect: [false],
     });
     this.optionsArray.push(option);
     this.cdr.markForCheck();
@@ -177,6 +196,8 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
     this.optionsArray.controls.forEach((control, index) => {
       if (index !== selectedIndex) {
         control.get('isCorrect')?.setValue(false);
+      } else {
+        control.get('isCorrect')?.setValue(true);
       }
     });
     this.cdr.markForCheck();
@@ -185,12 +206,12 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   addTrueFalseOptions(): void {
     const trueOption = this.fb.group({
       title: ['True', Validators.required],
-      isCorrect: [false]
+      isCorrect: [false],
     });
 
     const falseOption = this.fb.group({
       title: ['False', Validators.required],
-      isCorrect: [false]
+      isCorrect: [false],
     });
 
     this.optionsArray.push(trueOption);
@@ -208,7 +229,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
         type: Number(formValue.type),
         difficulty: Number(formValue.difficulty),
         subjectId: Number(formValue.subjectId),
-        options: formValue.options
+        options: formValue.options,
       };
 
       this.questionService.updateQuestion(this.questionId, question).subscribe({
@@ -223,7 +244,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
           console.error('Error updating question:', error);
           this.isLoading = false;
           alert('Failed to update question. Please try again.');
-        }
+        },
       });
     } else {
       this.markFormGroupTouched();
@@ -231,7 +252,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   }
 
   markFormGroupTouched(): void {
-    Object.keys(this.questionForm.controls).forEach(key => {
+    Object.keys(this.questionForm.controls).forEach((key) => {
       const control = this.questionForm.get(key);
       control?.markAsTouched();
     });

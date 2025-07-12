@@ -1,7 +1,12 @@
 export const environment = {
   production: false,
-  apiPort: 7138,
+  apiPort: 5000,
   get apiBaseUrl() {
-    return `https://localhost:${this.apiPort}/api`;
+    return `http://localhost:${this.apiPort}/api`;
+  },
+  endpoints: {
+    exam: '/exam',
+    questions: '/Questions',
+    subject: '/Subject',
   },
 };

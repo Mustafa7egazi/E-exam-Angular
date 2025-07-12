@@ -1,23 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IExamList } from '../models/iexam-list';
-import { IExamForm } from '../models/iexam-form';
+import { IExamList } from '../models/Exam/iexam-list';
+import { IExamForm } from '../models/Exam/iexam-form';
+import { IExamDisplay } from '../models/Exam/iexam-display';
+import { environment } from '../enviroment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Examservice {
-  baseUrl = 'https://localhost:7138/api/exam';
-  constructor(private http: HttpClient) { }
+  baseUrl = `${environment.apiBaseUrl}${environment.endpoints.exam}`;
+  constructor(private http: HttpClient) {}
   getTotalExams(): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/count`);
   }
   getExamList(): Observable<IExamList[]> {
     return this.http.get<IExamList[]>(this.baseUrl);
   }
-  getExamById(id: number): Observable<IExamList> {
-    return this.http.get<IExamList>(`${this.baseUrl}/${id}`);
+  getExamById(id: number): Observable<IExamDisplay> {
+    return this.http.get<IExamDisplay>(`${this.baseUrl}/${id}`);
   }
   addExam(exam: IExamForm): Observable<IExamForm> {
     return this.http.post<IExamForm>(this.baseUrl, exam);

@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { IQuestion } from '../models/Questions/IQuestions';
 import { ICreateOption } from '../models/Option/icreate-option';
 import { ICreateQuestion } from '../models/Questions/icreate-question';
+import { environment } from '../enviroment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class questionsService {
 
-  baseUrl = 'https://localhost:7138/api/Questions';
+  baseUrl = `${environment.apiBaseUrl}${environment.endpoints.questions}`;
   constructor(private http: HttpClient) { }
 
     getAllQuestions(): Observable<IQuestion[]> {

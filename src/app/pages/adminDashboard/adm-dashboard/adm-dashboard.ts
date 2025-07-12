@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Examservice } from '../../../services/examservice';
-import { IExamList } from '../../../models/iexam-list';
+import { IExamList } from '../../../models/Exam/iexam-list';
+import { IExamDisplay } from '../../../models/Exam/iexam-display';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,6 +15,7 @@ export class AdmDashboard implements OnInit, OnDestroy {
   exams: IExamList[] = [];
   totalExams: number = 0;
   private subscription!: Subscription;
+  selectedExam!: IExamDisplay | null;
   constructor(
     private examService: Examservice,
     private cdr: ChangeDetectorRef
@@ -47,12 +49,21 @@ export class AdmDashboard implements OnInit, OnDestroy {
   displayExamDetails(examId: number) {
     this.examService.getExamById(examId).subscribe({
       next: (response) => {
-        console.log(response);
+        this.selectedExam = response;
+        this.cdr.detectChanges();
+        this.openExamDetailsModal();
       },
       error: (error) => {
         console.log('Can not Get Exam');
       },
     });
+  }
+
+  openExamDetailsModal() {
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('examDetailsModal')
+    );
+    modal.show();
   }
   deleteExam(exam: IExamList) {
     this.examService.deleteExam(exam.id).subscribe({
