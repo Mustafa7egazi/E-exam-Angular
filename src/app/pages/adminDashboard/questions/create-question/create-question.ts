@@ -85,10 +85,9 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.questionForm = this.questionFormService.createQuestionForm();
-
-    // Add initial options
-    this.addOption();
-    this.addOption();
+    // Don't add any initial options - they will be added when question type is selected
+    // Trigger the question type change to add initial options based on default type
+    this.onQuestionTypeChange();
   }
 
   get optionsArray(): FormArray {
@@ -96,20 +95,29 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
   }
 
   get isMultipleChoice(): boolean {
-    return this.questionForm.get('type')?.value === QuestionType.MultipleChoice;
+    return this.questionForm.get('type')?.value == QuestionType.MultipleChoice;
+  }
+
+  get shouldShowAddButton(): boolean {
+    const questionType = this.questionForm.get('type')?.value;
+    const isMultipleChoice = questionType == QuestionType.MultipleChoice;
+    const hasLessThan4Options = this.optionsArray.length < 4;
+    return isMultipleChoice && hasLessThan4Options;
   }
 
   addOption(): void {
-    const option = this.questionFormService.createOptionForm();
-    this.optionsArray.push(option);
-    this.questionFormService.setupOptionValidation(this.optionsArray);
-    this.cdr.markForCheck();
+    // Only allow adding options for Multiple Choice questions with fewer than 4 options
+    if (this.isMultipleChoice && this.optionsArray.length < 4) {
+      const option = this.questionFormService.createOptionForm();
+      this.optionsArray.push(option);
+      this.questionFormService.setupOptionValidation(this.optionsArray);
+      this.cdr.markForCheck();
+    }
   }
 
-
-
   removeOption(index: number): void {
-    if (this.optionsArray.length > 2) {
+    // Only allow removal for Multiple Choice questions with more than 3 options
+    if (this.isMultipleChoice && this.optionsArray.length > 3) {
       this.optionsArray.removeAt(index);
       this.questionFormService.setupOptionValidation(this.optionsArray);
       this.cdr.markForCheck();
@@ -118,16 +126,24 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
 
   onQuestionTypeChange(): void {
     const questionType = this.questionForm.get('type')?.value;
-    this.questionFormService.handleQuestionTypeChange(questionType, this.optionsArray);
+
+    this.questionFormService.handleQuestionTypeChange(
+      questionType,
+      this.optionsArray
+    );
+    // Force form value update to trigger change detection
+    this.questionForm.updateValueAndValidity();
     this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   onCorrectOptionChange(selectedIndex: number): void {
-    this.questionFormService.ensureSingleCorrectOption(this.optionsArray, selectedIndex);
+    this.questionFormService.ensureSingleCorrectOption(
+      this.optionsArray,
+      selectedIndex
+    );
     this.cdr.markForCheck();
   }
-
-
 
   onSubmit(): void {
     if (this.questionForm.valid) {

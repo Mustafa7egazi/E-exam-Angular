@@ -135,12 +135,18 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
 
     // Add options with proper validation
     question.options.forEach((option) => {
-      const optionGroup = this.questionFormService.createOptionForm(option.title, option.isCorrect);
+      const optionGroup = this.questionFormService.createOptionForm(
+        option.title,
+        option.isCorrect
+      );
       this.optionsArray.push(optionGroup);
     });
 
     // Setup validation after adding options
     this.questionFormService.setupOptionValidation(this.optionsArray);
+
+    // Trigger change detection to update UI
+    this.cdr.markForCheck();
   }
 
   get optionsArray(): FormArray {
@@ -148,20 +154,29 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   }
 
   get isMultipleChoice(): boolean {
-    return this.questionForm.get('type')?.value === QuestionType.MultipleChoice;
+    return this.questionForm.get('type')?.value == QuestionType.MultipleChoice;
+  }
+
+  get shouldShowAddButton(): boolean {
+    const questionType = this.questionForm.get('type')?.value;
+    const isMultipleChoice = questionType == QuestionType.MultipleChoice;
+    const hasLessThan4Options = this.optionsArray.length < 4;
+    return isMultipleChoice && hasLessThan4Options;
   }
 
   addOption(): void {
-    const option = this.questionFormService.createOptionForm();
-    this.optionsArray.push(option);
-    this.questionFormService.setupOptionValidation(this.optionsArray);
-    this.cdr.markForCheck();
+    // Only allow adding options for Multiple Choice questions with fewer than 4 options
+    if (this.isMultipleChoice && this.optionsArray.length < 4) {
+      const option = this.questionFormService.createOptionForm();
+      this.optionsArray.push(option);
+      this.questionFormService.setupOptionValidation(this.optionsArray);
+      this.cdr.markForCheck();
+    }
   }
 
-
-
   removeOption(index: number): void {
-    if (this.optionsArray.length > 2) {
+    // Only allow removal for Multiple Choice questions with more than 3 options
+    if (this.isMultipleChoice && this.optionsArray.length > 3) {
       this.optionsArray.removeAt(index);
       this.questionFormService.setupOptionValidation(this.optionsArray);
       this.cdr.markForCheck();
@@ -170,20 +185,25 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
 
   onQuestionTypeChange(): void {
     const questionType = this.questionForm.get('type')?.value;
-
     // Handle the question type change
-    this.questionFormService.handleQuestionTypeChange(questionType, this.optionsArray);
-
+    this.questionFormService.handleQuestionTypeChange(
+      questionType,
+      this.optionsArray
+    );
+    // Force form value update to trigger change detection
+    this.questionForm.updateValueAndValidity();
     // Ensure change detection is triggered to update the UI
     this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   onCorrectOptionChange(selectedIndex: number): void {
-    this.questionFormService.ensureSingleCorrectOption(this.optionsArray, selectedIndex);
+    this.questionFormService.ensureSingleCorrectOption(
+      this.optionsArray,
+      selectedIndex
+    );
     this.cdr.markForCheck();
   }
-
-
 
   onOptionTextChange(): void {
     // Trigger validation when option text changes
@@ -208,7 +228,6 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
 
       this.questionService.updateQuestion(this.questionId, question).subscribe({
         next: (response) => {
-          console.log('Question updated successfully:', response);
           this.isLoading = false;
           this.cdr.markForCheck();
           // Navigate back to questions list

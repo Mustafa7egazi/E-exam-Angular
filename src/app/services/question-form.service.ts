@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormArray,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { QuestionType, DifficultyLevel } from '../models/Questions/IQuestions';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuestionFormService {
-
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   createQuestionForm() {
     return this.fb.group({
@@ -45,7 +49,10 @@ export class QuestionFormService {
       for (let i = 0; i < optionsArray.length; i++) {
         if (i !== currentIndex) {
           const otherOption = optionsArray.at(i);
-          const otherValue = otherOption.get('title')?.value?.trim().toLowerCase();
+          const otherValue = otherOption
+            .get('title')
+            ?.value?.trim()
+            .toLowerCase();
           if (otherValue === currentValue) {
             return { duplicate: true };
           }
@@ -76,6 +83,9 @@ export class QuestionFormService {
   }
 
   addTrueFalseOptions(optionsArray: FormArray): void {
+    // Clear any existing options first
+    this.clearOptionsArray(optionsArray);
+
     const trueOption = this.createOptionForm('True', false);
     const falseOption = this.createOptionForm('False', false);
 
@@ -87,23 +97,31 @@ export class QuestionFormService {
   addDefaultMultipleChoiceOptions(optionsArray: FormArray): void {
     const option1 = this.createOptionForm('', false);
     const option2 = this.createOptionForm('', false);
+    const option3 = this.createOptionForm('', false);
 
     optionsArray.push(option1);
     optionsArray.push(option2);
+    optionsArray.push(option3);
     this.setupOptionValidation(optionsArray);
   }
 
-  handleQuestionTypeChange(questionType: QuestionType, optionsArray: FormArray): void {
+  handleQuestionTypeChange(
+    questionType: QuestionType,
+    optionsArray: FormArray
+  ): void {
     this.clearOptionsArray(optionsArray);
 
-    if (questionType === QuestionType.TrueFalse) {
+    if (questionType == QuestionType.TrueFalse) {
       this.addTrueFalseOptions(optionsArray);
     } else {
       this.addDefaultMultipleChoiceOptions(optionsArray);
     }
   }
 
-  ensureSingleCorrectOption(optionsArray: FormArray, selectedIndex: number): void {
+  ensureSingleCorrectOption(
+    optionsArray: FormArray,
+    selectedIndex: number
+  ): void {
     optionsArray.controls.forEach((control, index) => {
       if (index !== selectedIndex) {
         control.get('isCorrect')?.setValue(false);
