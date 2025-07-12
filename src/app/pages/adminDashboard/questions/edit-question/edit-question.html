@@ -147,7 +147,7 @@
                   type="button"
                   class="btn btn-outline-primary btn-sm"
                   (click)="addOption()"
-                  *ngIf="questionForm.get('type')?.value === QuestionType.MultipleChoice"
+                  *ngIf="isMultipleChoice"
                 >
                   <i class="fas fa-plus me-1"></i>
                   Add Option
@@ -167,9 +167,9 @@
                           title="Correct Option"
                           class="form-check-input"
                           type="radio"
-                          [name]="'correctOption'"
+                          name="correctOption"
                           [id]="'correct' + i"
-                          formControlName="isCorrect"
+                          [checked]="option.get('isCorrect')?.value"
                           (change)="onCorrectOptionChange(i)"
                         >
                         <label class="form-check-label" [for]="'correct' + i">
@@ -185,9 +185,11 @@
                         formControlName="title"
                         [placeholder]="'Option ' + (i + 1)"
                         [class.is-invalid]="option.get('title')?.invalid && option.get('title')?.touched"
+                        (input)="onOptionTextChange()"
                       >
                       <div class="invalid-feedback" *ngIf="option.get('title')?.invalid && option.get('title')?.touched">
-                        Option text is required.
+                        <span *ngIf="option.get('title')?.errors?.['required']">Option text is required.</span>
+                        <span *ngIf="option.get('title')?.errors?.['duplicate']">This option already exists.</span>
                       </div>
                     </div>
                     <div class="col-md-2 text-end">
@@ -195,7 +197,7 @@
                         type="button"
                         class="btn btn-outline-danger btn-sm"
                         (click)="removeOption(i)"
-                        *ngIf="optionsArray.length > 2 && questionForm.get('type')?.value === QuestionType.MultipleChoice"
+                        *ngIf="optionsArray.length > 2 && isMultipleChoice"
                       >
                         <i class="fas fa-trash"></i>
                       </button>

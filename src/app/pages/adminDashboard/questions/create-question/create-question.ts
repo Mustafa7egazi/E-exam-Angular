@@ -16,6 +16,7 @@ import {
 import { Router } from '@angular/router';
 import { questionsService } from '../../../../services/questions-service';
 import { SubjectsService } from '../../../../services/subjects.service';
+import { QuestionFormService } from '../../../../services/question-form.service';
 import { ICreateQuestion } from '../../../../models/Questions/icreate-question';
 import { ICreateOption } from '../../../../models/Option/icreate-option';
 import {
@@ -54,6 +55,7 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private questionService: questionsService,
     private subjectsService: SubjectsService,
+    private questionFormService: QuestionFormService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -72,7 +74,7 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
       this.subjectsService.getAllSubjects().subscribe({
         next: (subjects: ISubject[]) => {
           this.subjects = subjects;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error loading subjects:', error);
@@ -82,133 +84,50 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    this.questionForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(10)]],
-      score: [1, [Validators.required, Validators.min(1), Validators.max(100)]],
-      type: [QuestionType.MultipleChoice, Validators.required],
-      difficulty: [DifficultyLevel.Easy, Validators.required],
-      subjectId: [null, Validators.required],
-      options: this.fb.array([]),
-    });
+    this.questionForm = this.questionFormService.createQuestionForm();
 
     // Add initial options
     this.addOption();
     this.addOption();
-    this.setupOptionValidation();
   }
 
   get optionsArray(): FormArray {
     return this.questionForm.get('options') as FormArray;
   }
 
+  get isMultipleChoice(): boolean {
+    return this.questionForm.get('type')?.value === QuestionType.MultipleChoice;
+  }
+
   addOption(): void {
-    const option = this.fb.group({
-      title: ['', [Validators.required, this.duplicateOptionValidator()]],
-      isCorrect: [false],
-    });
+    const option = this.questionFormService.createOptionForm();
     this.optionsArray.push(option);
-    this.setupOptionValidation();
+    this.questionFormService.setupOptionValidation(this.optionsArray);
     this.cdr.markForCheck();
   }
 
-  setupOptionValidation(): void {
-    // Set up validation for all options
-    this.optionsArray.controls.forEach((control, index) => {
-      const titleControl = control.get('title');
-      if (titleControl) {
-        titleControl.setValidators([
-          Validators.required,
-          this.duplicateOptionValidator(),
-        ]);
-        titleControl.updateValueAndValidity();
-      }
-    });
-  }
 
-  duplicateOptionValidator() {
-    return (control: any) => {
-      if (!control.value) {
-        return null;
-      }
-
-      const currentValue = control.value.trim().toLowerCase();
-      const currentIndex = this.optionsArray.controls.indexOf(control.parent);
-
-      for (let i = 0; i < this.optionsArray.length; i++) {
-        if (i !== currentIndex) {
-          const otherOption = this.optionsArray.at(i);
-          const otherValue = otherOption
-            .get('title')
-            ?.value?.trim()
-            .toLowerCase();
-          if (otherValue === currentValue) {
-            return { duplicate: true };
-          }
-        }
-      }
-
-      return null;
-    };
-  }
 
   removeOption(index: number): void {
     if (this.optionsArray.length > 2) {
       this.optionsArray.removeAt(index);
+      this.questionFormService.setupOptionValidation(this.optionsArray);
       this.cdr.markForCheck();
     }
   }
 
   onQuestionTypeChange(): void {
     const questionType = this.questionForm.get('type')?.value;
-
-    if (questionType === QuestionType.TrueFalse) {
-      // Clear existing options and add True/False options
-      while (this.optionsArray.length > 0) {
-        this.optionsArray.removeAt(0);
-      }
-
-      this.addTrueFalseOptions();
-    } else {
-      // Clear existing options and add multiple choice options
-      while (this.optionsArray.length > 0) {
-        this.optionsArray.removeAt(0);
-      }
-
-      this.addOption();
-      this.addOption();
-    }
-
-    this.setupOptionValidation();
+    this.questionFormService.handleQuestionTypeChange(questionType, this.optionsArray);
     this.cdr.markForCheck();
   }
 
   onCorrectOptionChange(selectedIndex: number): void {
-    // Ensure only one option is marked as correct
-    this.optionsArray.controls.forEach((control, index) => {
-      if (index !== selectedIndex) {
-        control.get('isCorrect')?.setValue(false);
-      } else {
-        control.get('isCorrect')?.setValue(true);
-      }
-    });
+    this.questionFormService.ensureSingleCorrectOption(this.optionsArray, selectedIndex);
     this.cdr.markForCheck();
   }
 
-  addTrueFalseOptions(): void {
-    const trueOption = this.fb.group({
-      title: ['True', [Validators.required, this.duplicateOptionValidator()]],
-      isCorrect: [false],
-    });
 
-    const falseOption = this.fb.group({
-      title: ['False', [Validators.required, this.duplicateOptionValidator()]],
-      isCorrect: [false],
-    });
-
-    this.optionsArray.push(trueOption);
-    this.optionsArray.push(falseOption);
-    this.setupOptionValidation();
-  }
 
   onSubmit(): void {
     if (this.questionForm.valid) {
@@ -228,7 +147,7 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
       this.questionService.addQuestion(question).subscribe({
         next: (response) => {
           this.isLoading = false;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
           // Navigate back to questions list
           this.router.navigate(['/admin/questions']);
         },
@@ -236,7 +155,7 @@ export class CreateQuestionComponent implements OnInit, OnDestroy {
           console.error('Error creating question:', error);
           console.error('Error details:', error.error);
           this.isLoading = false;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
           alert('Failed to create question. Please try again.');
         },
       });

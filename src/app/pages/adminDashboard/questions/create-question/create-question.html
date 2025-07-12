@@ -116,7 +116,7 @@
                   Answer Options
                 </h5>
                 <button type="button" class="btn btn-outline-primary btn-sm" (click)="addOption()"
-                  *ngIf="questionForm.get('type')?.value === QuestionType.MultipleChoice">
+                  *ngIf="isMultipleChoice">
                   <i class="fas fa-plus me-1"></i>
                   Add Option
                 </button>
@@ -149,7 +149,7 @@
                     </div>
                     <div class="col-md-2 text-end">
                       <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeOption(i)"
-                        *ngIf="optionsArray.length > 2 && questionForm.get('type')?.value === QuestionType.MultipleChoice">
+                        *ngIf="optionsArray.length > 2 && isMultipleChoice">
                         <i class="fas fa-trash"></i>
                       </button>
                     </div>

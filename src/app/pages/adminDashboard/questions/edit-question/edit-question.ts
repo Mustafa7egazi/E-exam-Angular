@@ -16,6 +16,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { questionsService } from '../../../../services/questions-service';
 import { SubjectsService } from '../../../../services/subjects.service';
+import { QuestionFormService } from '../../../../services/question-form.service';
 import { IQuestion } from '../../../../models/Questions/IQuestions';
 import { ICreateQuestion } from '../../../../models/Questions/icreate-question';
 import { ICreateOption } from '../../../../models/Option/icreate-option';
@@ -57,6 +58,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private questionService: questionsService,
     private subjectsService: SubjectsService,
+    private questionFormService: QuestionFormService,
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
@@ -81,7 +83,7 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
       this.subjectsService.getAllSubjects().subscribe({
         next: (subjects: ISubject[]) => {
           this.subjects = subjects;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error loading subjects:', error);
@@ -92,6 +94,8 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
 
   loadQuestion(): void {
     this.isLoading = true;
+    this.cdr.markForCheck();
+
     this.subscription.add(
       this.questionService.getQuestionById(this.questionId).subscribe({
         next: (question: IQuestion) => {
@@ -99,12 +103,12 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
           this.initForm();
           this.populateForm(question);
           this.isLoading = false;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error loading question:', error);
           this.isLoading = false;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
           alert('Failed to load question. Please try again.');
           this.router.navigate(['/admin/questions']);
         },
@@ -113,21 +117,12 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    this.questionForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(10)]],
-      score: [1, [Validators.required, Validators.min(1), Validators.max(100)]],
-      type: [QuestionType.MultipleChoice, Validators.required],
-      difficulty: [DifficultyLevel.Easy, Validators.required],
-      subjectId: [null, Validators.required],
-      options: this.fb.array([]),
-    });
+    this.questionForm = this.questionFormService.createQuestionForm();
   }
 
   populateForm(question: IQuestion): void {
-    // Clear existing options
-    while (this.optionsArray.length > 0) {
-      this.optionsArray.removeAt(0);
-    }
+    // Clear existing options array completely
+    this.questionFormService.clearOptionsArray(this.optionsArray);
 
     // Populate form with question data
     this.questionForm.patchValue({
@@ -138,32 +133,37 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
       subjectId: question.subjectId,
     });
 
-    // Add options
+    // Add options with proper validation
     question.options.forEach((option) => {
-      const optionGroup = this.fb.group({
-        title: [option.title, Validators.required],
-        isCorrect: [option.isCorrect],
-      });
+      const optionGroup = this.questionFormService.createOptionForm(option.title, option.isCorrect);
       this.optionsArray.push(optionGroup);
     });
+
+    // Setup validation after adding options
+    this.questionFormService.setupOptionValidation(this.optionsArray);
   }
 
   get optionsArray(): FormArray {
     return this.questionForm.get('options') as FormArray;
   }
 
+  get isMultipleChoice(): boolean {
+    return this.questionForm.get('type')?.value === QuestionType.MultipleChoice;
+  }
+
   addOption(): void {
-    const option = this.fb.group({
-      title: ['', Validators.required],
-      isCorrect: [false],
-    });
+    const option = this.questionFormService.createOptionForm();
     this.optionsArray.push(option);
+    this.questionFormService.setupOptionValidation(this.optionsArray);
     this.cdr.markForCheck();
   }
+
+
 
   removeOption(index: number): void {
     if (this.optionsArray.length > 2) {
       this.optionsArray.removeAt(index);
+      this.questionFormService.setupOptionValidation(this.optionsArray);
       this.cdr.markForCheck();
     }
   }
@@ -171,56 +171,30 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   onQuestionTypeChange(): void {
     const questionType = this.questionForm.get('type')?.value;
 
-    if (questionType === QuestionType.TrueFalse) {
-      // Clear existing options and add True/False options
-      while (this.optionsArray.length > 0) {
-        this.optionsArray.removeAt(0);
-      }
+    // Handle the question type change
+    this.questionFormService.handleQuestionTypeChange(questionType, this.optionsArray);
 
-      this.addTrueFalseOptions();
-    } else {
-      // Clear existing options and add multiple choice options
-      while (this.optionsArray.length > 0) {
-        this.optionsArray.removeAt(0);
-      }
-
-      this.addOption();
-      this.addOption();
-    }
-
+    // Ensure change detection is triggered to update the UI
     this.cdr.markForCheck();
   }
 
   onCorrectOptionChange(selectedIndex: number): void {
-    // Ensure only one option is marked as correct
-    this.optionsArray.controls.forEach((control, index) => {
-      if (index !== selectedIndex) {
-        control.get('isCorrect')?.setValue(false);
-      } else {
-        control.get('isCorrect')?.setValue(true);
-      }
-    });
+    this.questionFormService.ensureSingleCorrectOption(this.optionsArray, selectedIndex);
     this.cdr.markForCheck();
   }
 
-  addTrueFalseOptions(): void {
-    const trueOption = this.fb.group({
-      title: ['True', Validators.required],
-      isCorrect: [false],
-    });
 
-    const falseOption = this.fb.group({
-      title: ['False', Validators.required],
-      isCorrect: [false],
-    });
 
-    this.optionsArray.push(trueOption);
-    this.optionsArray.push(falseOption);
+  onOptionTextChange(): void {
+    // Trigger validation when option text changes
+    this.questionFormService.setupOptionValidation(this.optionsArray);
+    this.cdr.markForCheck();
   }
 
   onSubmit(): void {
     if (this.questionForm.valid) {
       this.isLoading = true;
+      this.cdr.markForCheck();
 
       const formValue = this.questionForm.value;
       const question: ICreateQuestion = {
@@ -236,13 +210,14 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
         next: (response) => {
           console.log('Question updated successfully:', response);
           this.isLoading = false;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
           // Navigate back to questions list
           this.router.navigate(['/admin/questions']);
         },
         error: (error) => {
           console.error('Error updating question:', error);
           this.isLoading = false;
+          this.cdr.markForCheck();
           alert('Failed to update question. Please try again.');
         },
       });
@@ -254,9 +229,12 @@ export class EditQuestionComponent implements OnInit, OnDestroy {
   markFormGroupTouched(): void {
     Object.keys(this.questionForm.controls).forEach((key) => {
       const control = this.questionForm.get(key);
-      control?.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched();
+      } else {
+        control?.markAsTouched();
+      }
     });
-    this.cdr.markForCheck();
   }
 
   cancel(): void {
