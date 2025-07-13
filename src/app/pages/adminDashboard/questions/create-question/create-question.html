@@ -25,12 +25,17 @@
               <textarea id="title" formControlName="title" class="form-control" rows="3"
                 placeholder="Enter your question here..."
                 [class.is-invalid]="questionForm.get('title')?.invalid && questionForm.get('title')?.touched"></textarea>
-              <div class="invalid-feedback"
-                *ngIf="questionForm.get('title')?.invalid && questionForm.get('title')?.touched">
-                <span *ngIf="questionForm.get('title')?.errors?.['required']">Question title is required.</span>
-                <span *ngIf="questionForm.get('title')?.errors?.['minlength']">Question title must be at least 10
-                  characters.</span>
-              </div>
+              @if (questionForm.get('title')?.invalid && questionForm.get('title')?.touched) {
+                <div class="invalid-feedback">
+                  @if (questionForm.get('title')?.errors?.['required']) {
+                    <span>Question title is required.</span>
+                  }
+                  @if (questionForm.get('title')?.errors?.['minlength']) {
+                    <span>Question title must be at least 10
+                      characters.</span>
+                  }
+                </div>
+              }
               <div class="form-text">Write a clear and concise question that students can easily understand.</div>
             </div>
 
@@ -46,10 +51,11 @@
                   <option [value]="QuestionType.MultipleChoice">Multiple Choice</option>
                   <option [value]="QuestionType.TrueFalse">True/False</option>
                 </select>
-                <div class="invalid-feedback"
-                  *ngIf="questionForm.get('type')?.invalid && questionForm.get('type')?.touched">
-                  Please select a question type.
-                </div>
+                @if (questionForm.get('type')?.invalid && questionForm.get('type')?.touched) {
+                  <div class="invalid-feedback">
+                    Please select a question type.
+                  </div>
+                }
               </div>
 
               <!-- Difficulty Level -->
@@ -63,10 +69,11 @@
                   <option [value]="DifficultyLevel.Medium">Medium</option>
                   <option [value]="DifficultyLevel.Hard">Hard</option>
                 </select>
-                <div class="invalid-feedback"
-                  *ngIf="questionForm.get('difficulty')?.invalid && questionForm.get('difficulty')?.touched">
-                  Please select a difficulty level.
-                </div>
+                @if (questionForm.get('difficulty')?.invalid && questionForm.get('difficulty')?.touched) {
+                  <div class="invalid-feedback">
+                    Please select a difficulty level.
+                  </div>
+                }
               </div>
             </div>
 
@@ -79,14 +86,17 @@
                 </label>
                 <select id="subjectId" formControlName="subjectId" class="form-select"
                   [class.is-invalid]="questionForm.get('subjectId')?.invalid && questionForm.get('subjectId')?.touched">
-                  <option *ngFor="let subject of subjects" [value]="subject.id">
-                    {{ subject.name }}
-                  </option>
+                  @for (subject of subjects; track subject.id) {
+                    <option [value]="subject.id">
+                      {{ subject.name }}
+                    </option>
+                  }
                 </select>
-                <div class="invalid-feedback"
-                  *ngIf="questionForm.get('subjectId')?.invalid && questionForm.get('subjectId')?.touched">
-                  Please select a subject.
-                </div>
+                @if (questionForm.get('subjectId')?.invalid && questionForm.get('subjectId')?.touched) {
+                  <div class="invalid-feedback">
+                    Please select a subject.
+                  </div>
+                }
               </div>
 
               <!-- Score -->
@@ -96,12 +106,19 @@
                 </label>
                 <input type="number" id="score" formControlName="score" class="form-control" min="1" max="100"
                   [class.is-invalid]="questionForm.get('score')?.invalid && questionForm.get('score')?.touched">
-                <div class="invalid-feedback"
-                  *ngIf="questionForm.get('score')?.invalid && questionForm.get('score')?.touched">
-                  <span *ngIf="questionForm.get('score')?.errors?.['required']">Score is required.</span>
-                  <span *ngIf="questionForm.get('score')?.errors?.['min']">Score must be at least 1.</span>
-                  <span *ngIf="questionForm.get('score')?.errors?.['max']">Score cannot exceed 100.</span>
-                </div>
+                @if (questionForm.get('score')?.invalid && questionForm.get('score')?.touched) {
+                  <div class="invalid-feedback">
+                    @if (questionForm.get('score')?.errors?.['required']) {
+                      <span>Score is required.</span>
+                    }
+                    @if (questionForm.get('score')?.errors?.['min']) {
+                      <span>Score must be at least 1.</span>
+                    }
+                    @if (questionForm.get('score')?.errors?.['max']) {
+                      <span>Score cannot exceed 100.</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
@@ -113,66 +130,81 @@
                   Answer Options
                 </h5>
                 <div class="d-flex align-items-center gap-2">
-                  <small class="text-muted" *ngIf="isMultipleChoice">
-                    {{ optionsArray.length }}/4 options
-                  </small>
-                  <button type="button" class="btn btn-outline-primary btn-sm" (click)="addOption()"
-                    *ngIf="shouldShowAddButton">
-                    <i class="fas fa-plus me-1"></i>
-                    Add Option
-                  </button>
+                  @if (isMultipleChoice) {
+                    <small class="text-muted">
+                      {{ optionsArray.length }}/4 options
+                    </small>
+                  }
+                  @if (shouldShowAddButton) {
+                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="addOption()">
+                      <i class="fas fa-plus me-1"></i>
+                      Add Option
+                    </button>
+                  }
                   <!-- Debug info -->
 
                 </div>
               </div>
 
               <div formArrayName="options" class="options-container">
-                <div *ngFor="let option of optionsArray.controls; let i = index" [formGroupName]="i"
-                  class="option-item border rounded p-3 mb-3">
-                  <div class="row align-items-center">
-                    <div class="col-md-2">
-                      <div class="form-check d-flex justify-content-center gap-1">
-                        <input title="Correct Option" class="form-check-input" type="radio" [name]="'correctOption'"
-                          [id]="'correct' + i" [checked]="option.get('isCorrect')?.value"
-                          (change)="onCorrectOptionChange(i)">
-                        <label class="form-check-label" [for]="'correct' + i">
-                          Correct
-                        </label>
+                @for (option of optionsArray.controls; track $index; let i = $index) {
+                  <div [formGroupName]="i"
+                    class="option-item border rounded p-3 mb-3">
+                    <div class="row align-items-center">
+                      <div class="col-md-2">
+                        <div class="form-check d-flex justify-content-center gap-1">
+                          <input title="Correct Option" class="form-check-input" type="radio" [name]="'correctOption'"
+                            [id]="'correct' + i" [checked]="option.get('isCorrect')?.value"
+                            (change)="onCorrectOptionChange(i)">
+                          <label class="form-check-label" [for]="'correct' + i">
+                            Correct
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-8">
-                      <input title="Option" type="text" class="form-control" formControlName="title"
-                        [placeholder]="'Option ' + (i + 1)"
-                        [class.is-invalid]="option.get('title')?.invalid && option.get('title')?.touched"
-                        (input)="onOptionTextChange()">
-                      <div class="invalid-feedback"
-                        *ngIf="option.get('title')?.invalid && option.get('title')?.touched">
-                        <span *ngIf="option.get('title')?.errors?.['required']">Option text is required.</span>
-                        <span *ngIf="option.get('title')?.errors?.['duplicate']">This option already exists.</span>
+                      <div class="col-md-8">
+                        <input title="Option" type="text" class="form-control" formControlName="title"
+                          [placeholder]="'Option ' + (i + 1)"
+                          [class.is-invalid]="option.get('title')?.invalid && option.get('title')?.touched"
+                          (input)="onOptionTextChange()">
+                        @if (option.get('title')?.invalid && option.get('title')?.touched) {
+                          <div class="invalid-feedback">
+                            @if (option.get('title')?.errors?.['required']) {
+                              <span>Option text is required.</span>
+                            }
+                            @if (option.get('title')?.errors?.['duplicate']) {
+                              <span>This option already exists.</span>
+                            }
+                          </div>
+                        }
                       </div>
-                    </div>
-                    <div class="col-md-2 text-end">
-                      <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeOption(i)"
-                        *ngIf="isMultipleChoice && optionsArray.length > 3">
-                        <i class="fas fa-trash"></i>
-                      </button>
+                      <div class="col-md-2 text-end">
+                        @if (isMultipleChoice && optionsArray.length > 3) {
+                          <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeOption(i)">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        }
+                      </div>
                     </div>
                   </div>
+                }
+              </div>
+
+              @if (questionForm.get('type')?.value === QuestionType.TrueFalse) {
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>
+                  For True/False questions, select the correct answer by clicking the radio button next to "True" or
+                  "False".
                 </div>
-              </div>
+              }
 
-              <div class="alert alert-info" *ngIf="questionForm.get('type')?.value === QuestionType.TrueFalse">
-                <i class="fas fa-info-circle me-2"></i>
-                For True/False questions, select the correct answer by clicking the radio button next to "True" or
-                "False".
-              </div>
-
-              <div class="alert alert-info" *ngIf="questionForm.get('type')?.value === QuestionType.MultipleChoice">
-                <i class="fas fa-info-circle me-2"></i>
-                For Multiple Choice questions, you have 3-4 options. Enter clear and distinct option titles. You can add
-                up to 4 options total. Select the correct answer by clicking the radio button next to the appropriate
-                option.
-              </div>
+              @if (questionForm.get('type')?.value === QuestionType.MultipleChoice) {
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>
+                  For Multiple Choice questions, you have 3-4 options. Enter clear and distinct option titles. You can add
+                  up to 4 options total. Select the correct answer by clicking the radio button next to the appropriate
+                  option.
+                </div>
+              }
             </div>
 
             <!-- Form Actions -->
@@ -182,8 +214,12 @@
                 Cancel
               </button>
               <button type="submit" class="btn btn-primary" [disabled]="questionForm.invalid || isLoading">
-                <i class="fas fa-save me-1" *ngIf="!isLoading"></i>
-                <span class="spinner-border spinner-border-sm me-1" *ngIf="isLoading"></span>
+                @if (!isLoading) {
+                  <i class="fas fa-save me-1"></i>
+                }
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-1"></span>
+                }
                 {{ isLoading ? 'Creating...' : 'Create Question' }}
               </button>
             </div>

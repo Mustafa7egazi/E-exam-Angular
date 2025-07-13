@@ -59,9 +59,11 @@
               <label for="subjectId" class="form-label">Subject</label>
               <select id="subjectId" formControlName="subjectId" class="form-select">
                 <option value="">All Subjects</option>
-                <option *ngFor="let subject of subjects; trackBy: trackBySubjectId" [value]="subject.id">
-                  {{ subject.name }}
-                </option>
+                @for (subject of subjects; track subject.id) {
+                  <option [value]="subject.id">
+                    {{ subject.name }}
+                  </option>
+                }
               </select>
             </div>
 
@@ -70,9 +72,11 @@
               <label for="difficulty" class="form-label">Difficulty</label>
               <select id="difficulty" formControlName="difficulty" class="form-select">
                 <option value="">All Levels</option>
-                <option *ngFor="let level of difficultyLevels" [value]="level.value">
-                  {{ level.label }}
-                </option>
+                @for (level of difficultyLevels; track level.value) {
+                  <option [value]="level.value">
+                    {{ level.label }}
+                  </option>
+                }
               </select>
             </div>
 
@@ -81,9 +85,11 @@
               <label for="type" class="form-label">Type</label>
               <select id="type" formControlName="type" class="form-select">
                 <option value="">All Types</option>
-                <option *ngFor="let type of questionTypes" [value]="type.value">
-                  {{ type.label }}
-                </option>
+                @for (type of questionTypes; track type.value) {
+                  <option [value]="type.value">
+                    {{ type.label }}
+                  </option>
+                }
               </select>
             </div>
 
@@ -105,141 +111,154 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="row">
-    <div class="col-12 text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+  @if (isLoading) {
+    <div class="row">
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3 text-muted">Loading questions...</p>
       </div>
-      <p class="mt-3 text-muted">Loading questions...</p>
     </div>
-  </div>
+  }
 
   <!-- Error State -->
-  <div *ngIf="errorMessage && !isLoading" class="row">
-    <div class="col-12">
-      <div class="alert alert-danger" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        {{ errorMessage }}
-        <button
-          type="button"
-          class="btn btn-outline-danger btn-sm ms-3"
-          (click)="loadQuestions()"
-        >
-          <i class="fas fa-redo me-1"></i>
-          Retry
-        </button>
+  @if (errorMessage && !isLoading) {
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          {{ errorMessage }}
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm ms-3"
+            (click)="loadQuestions()"
+          >
+            <i class="fas fa-redo me-1"></i>
+            Retry
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- Questions Table -->
-  <div *ngIf="!isLoading && !errorMessage" class="row">
-    <div class="col-12">
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-white">
-          <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">
-              <i class="fas fa-list me-2"></i>
-              Questions ({{ filteredQuestions.length }})
-            </h5>
-            <div class="text-muted">
-              Showing {{ filteredQuestions.length }} of {{ questions.length }} questions
+  @if (!isLoading && !errorMessage) {
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>
+                Questions ({{ filteredQuestions.length }})
+              </h5>
+              <div class="text-muted">
+                Showing {{ filteredQuestions.length }} of {{ questions.length }} questions
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="card-body p-0">
-          <!-- No Questions Found -->
-          <div *ngIf="filteredQuestions.length === 0" class="text-center py-5">
-            <i class="fas fa-search fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">No questions found</h5>
-            <p class="text-muted">
-              {{ questions.length === 0 ? 'No questions have been created yet.' : 'No questions match your current filters.' }}
-            </p>
-            <button
-              *ngIf="questions.length === 0"
-              class="btn btn-primary"
-              (click)="createNewQuestion()"
-            >
-              <i class="fas fa-plus me-2"></i>
-              Create Your First Question
-            </button>
-          </div>
+          <div class="card-body p-0">
+            <!-- No Questions Found -->
+            @if (filteredQuestions.length === 0) {
+              <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No questions found</h5>
+                <p class="text-muted">
+                  {{ questions.length === 0 ? 'No questions have been created yet.' : 'No questions match your current filters.' }}
+                </p>
+                @if (questions.length === 0) {
+                  <button
+                    class="btn btn-primary"
+                    (click)="createNewQuestion()"
+                  >
+                    <i class="fas fa-plus me-2"></i>
+                    Create Your First Question
+                  </button>
+                }
+              </div>
+            }
 
-          <!-- Questions Table -->
-          <div *ngIf="filteredQuestions.length > 0" class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th scope="col" class="border-0">Question</th>
-                  <th scope="col" class="border-0">Subject</th>
-                  <th scope="col" class="border-0">Type</th>
-                  <th scope="col" class="border-0">Difficulty</th>
-                  <th scope="col" class="border-0">Score</th>
-                  <th scope="col" class="border-0">Options</th>
-                  <th scope="col" class="border-0 text-end">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let question of filteredQuestions" class="question-row">
-                  <td>
-                    <div class="question-title">
-                      <strong>{{ question.title }}</strong>
-                    </div>
-                    <small class="text-muted">
-                      ID: {{ question.id }}
-                    </small>
-                  </td>
-                  <td>
-                    <span class="badge bg-secondary">{{ question.subjectName }}</span>
-                  </td>
-                  <td>
-                    <span [class]="getTypeClass(question.type)">
-                      {{ question.type === 0 ? 'Multiple Choice' : 'True/False' }}
-                    </span>
-                  </td>
-                  <td>
-                    <span [class]="getDifficultyClass(question.difficulty)">
-                      {{ question.difficulty === 0 ? 'Easy' : question.difficulty === 1 ? 'Medium' : 'Hard' }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="badge bg-info">{{ question.score }} pts</span>
-                  </td>
-                  <td>
-                    <span class="text-muted">
-                      {{ question.options.length }} options
-                      <span class="text-success ms-1">
-                        ({{ getCorrectOptionsCount(question) }} correct)
-                      </span>
-                    </span>
-                  </td>
-                  <td class="text-end">
-                    <div class="btn-group" role="group">
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary btn-sm"
-                        (click)="editQuestion(question.id)"
-                        title="Edit Question"
-                      >
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger btn-sm"
-                        (click)="deleteQuestion(question.id)"
-                        title="Delete Question"
-                      >
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <!-- Questions Table -->
+            @if (filteredQuestions.length > 0) {
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col" class="border-0">Question</th>
+                      <th scope="col" class="border-0">Subject</th>
+                      <th scope="col" class="border-0">Type</th>
+                      <th scope="col" class="border-0">Difficulty</th>
+                      <th scope="col" class="border-0">Score</th>
+                      <th scope="col" class="border-0">Options</th>
+                      <th scope="col" class="border-0 text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (question of filteredQuestions; track question.id) {
+                      <tr class="question-row">
+                        <td>
+                          <div class="question-title">
+                            <strong>{{ question.title }}</strong>
+                          </div>
+                          <small class="text-muted">
+                            ID: {{ question.id }}
+                          </small>
+                        </td>
+                        <td>
+                          <span class="badge bg-secondary">{{ question.subjectName }}</span>
+                        </td>
+                        <td>
+                          <span [class]="getTypeClass(question.type)">
+                            {{ question.type === 0 ? 'Multiple Choice' : 'True/False' }}
+                          </span>
+                        </td>
+                        <td>
+                          <span [class]="getDifficultyClass(question.difficulty)">
+                            {{ question.difficulty === 0 ? 'Easy' : question.difficulty === 1 ? 'Medium' : 'Hard' }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="badge bg-info">{{ question.score }} pts</span>
+                        </td>
+                        <td>
+                          <span class="text-muted">
+                            {{ question.options.length }} options
+                            <span class="text-success ms-1">
+                              ({{ getCorrectOptionsCount(question) }} correct)
+                            </span>
+                          </span>
+                        </td>
+                        <td class="text-end">
+                          <div class="btn-group" role="group">
+                            <button
+                              type="button"
+                              class="btn btn-outline-primary btn-sm"
+                              (click)="editQuestion(question.id)"
+                              title="Edit Question"
+                            >
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-danger btn-sm"
+                              (click)="deleteQuestion(question.id)"
+                              title="Delete Question"
+                            >
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
           </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

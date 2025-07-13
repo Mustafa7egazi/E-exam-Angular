@@ -56,7 +56,7 @@ export class CreateSubjectComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.cdr.detectChanges();
           alert('Subject created successfully!');
-          this.router.navigate(['/admin/subjects']);
+          this.router.navigate(['/admin/questions']);
         },
         error: (error: any) => {
           console.error('Error creating subject:', error);
@@ -80,6 +80,6 @@ export class CreateSubjectComponent implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-    this.router.navigate(['/admin/subjects']);
+    this.router.navigate(['/admin/questions']);
   }
 }

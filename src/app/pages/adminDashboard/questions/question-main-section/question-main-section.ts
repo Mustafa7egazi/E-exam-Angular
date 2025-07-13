@@ -143,9 +143,15 @@ export class QuestionMainSection implements OnInit, OnDestroy {
   }
 
   clearFilters(): void {
-    this.filterForm.reset();
     this.filteredQuestions = [...this.questions];
     this.cdr.markForCheck();
+    this.filterForm = this.fb.group({
+      subjectId: [''],
+      difficulty: [''],
+      type: [''],
+      searchTerm: ['']
+    });
+    this.cdr.detectChanges();
     // Trigger filter application after reset
     setTimeout(() => {
       this.applyFilters();
