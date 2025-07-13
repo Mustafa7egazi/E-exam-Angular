@@ -21,6 +21,9 @@ export class Examservice {
   getExamById(id: number): Observable<IExamDisplay> {
     return this.http.get<IExamDisplay>(`${this.baseUrl}/${id}`);
   }
+  getExamForUpdateById(id: number): Observable<IExamForm> {
+    return this.http.get<IExamForm>(`${this.baseUrl}/GetForEdit/${id}`);
+  }
   addExam(exam: IExamForm): Observable<IExamForm> {
     return this.http.post<IExamForm>(this.baseUrl, exam);
   }

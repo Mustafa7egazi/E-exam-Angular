@@ -118,7 +118,8 @@
               (click)="displayExamDetails(exam.id);">
               <i class="fas fa-eye h-5 w-5 fs-5"></i>
             </button>
-            <button class="btn btn-light btn-sm rounded-circle me-2" title="Edit Exam">
+            <button class="btn btn-light btn-sm rounded-circle me-2" title="Edit Exam"
+            (click)="EditExam(exam.id);">
               <i class="fas fa-pen h-5 w-5 fs-5 text-primary"></i>
             </button>
             <button class="btn btn-light btn-sm rounded-circle" title="Toggle Publish State" (click)="deleteExam(exam)">

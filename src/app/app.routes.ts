@@ -19,6 +19,7 @@ export const routes: Routes = [
   { path: 'student/register', component: StudentAuth },
   { path: 'admin/dashboard', component: AdmDashboard },
   { path: 'admin/exam', component: ExamForm },
+  { path: 'admin/exams/edit/:id', component: ExamForm },
   { path: 'student-dashboard', component: StuDashboard },
   { path: 'admin/questions', component: QuestionMainSection },
   { path: 'admin/questions/create', component: CreateQuestionComponent },

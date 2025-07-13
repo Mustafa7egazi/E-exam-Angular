@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Examservice } from '../../../services/examservice';
 import { IExamList } from '../../../models/Exam/iexam-list';
 import { IExamDisplay } from '../../../models/Exam/iexam-display';
@@ -18,7 +18,8 @@ export class AdmDashboard implements OnInit, OnDestroy {
   selectedExam!: IExamDisplay | null;
   constructor(
     private examService: Examservice,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +65,9 @@ export class AdmDashboard implements OnInit, OnDestroy {
       document.getElementById('examDetailsModal')
     );
     modal.show();
+  }
+  EditExam(examId: number) {
+    this.router.navigate(['/admin/exams/edit', examId]);
   }
   deleteExam(exam: IExamList) {
     this.examService.deleteExam(exam.id).subscribe({

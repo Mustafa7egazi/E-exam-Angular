@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Examservice } from '../../../services/examservice';
 import { IExamList } from '../../../models/Exam/iexam-list';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { questionsService } from '../../../services/questions-service';
 import {
@@ -19,6 +19,7 @@ import { SubjectsService } from '../../../services/subjects.service';
 import { ISubject } from '../../../models/Subject/ISubject';
 import { Router } from '@angular/router';
 import { IExamForm } from '../../../models/Exam/iexam-form';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-exam-form',
@@ -28,21 +29,18 @@ import { IExamForm } from '../../../models/Exam/iexam-form';
 })
 export class ExamForm implements OnInit, OnDestroy {
   exams: IExamList[] = [];
+  examId: number = 0;
 
-  // Form
   examForm!: FormGroup;
   isSubmitting: boolean = false;
 
-  // Questions management
   availableQuestions: IQuestion[] = [];
   selectedQuestions: IQuestion[] = [];
   isLoadingQuestions: boolean = false;
 
-  // Subjects
   subjects: ISubject[] = [];
   isLoadingSubjects: boolean = false;
 
-  // Expose enums for template use
   QuestionType = QuestionType;
   DifficultyLevel = DifficultyLevel;
 
@@ -54,12 +52,63 @@ export class ExamForm implements OnInit, OnDestroy {
     private subjectsService: SubjectsService,
     private fb: FormBuilder,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+    const idParam = params['id'];
+    const id = Number(idParam);
+
+    if (!isNaN(id)) {
+      this.examId = id;
+      if (this.examId !== 0) {
+        this.loadExamForEdit(this.examId);
+      }
+    } else {
+      this.examId = 0;
+    }
+
     this.initForm();
+  });
+
+
     this.loadSubjects();
+  }
+
+  loadExamForEdit(id: number): void {
+    this.examService.getExamForUpdateById(id).subscribe({
+      next: async (exam) => {
+        this.examForm.patchValue({
+          title: exam.name,
+          subjectId: exam.subjectId,
+          duration: exam.durationInMinites,
+          isPublished: exam.isPublished,
+          passMark: (exam.passMark / exam.totalMarks) * 100,
+        });
+
+        try {
+          const questionDetails = await Promise.all(
+            exam.examQuestions.map((questionId) =>
+              firstValueFrom(this.questionService.getQuestionById(questionId))
+            )
+          );
+          this.selectedQuestions = questionDetails;
+        } catch (error) {
+          console.error('Error loading selected questions:', error);
+        }
+
+        this.cdr.markForCheck();
+
+        if (exam.subjectId) {
+          this.loadQuestionsBySubject(exam.subjectId);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading exam:', err);
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -72,19 +121,11 @@ export class ExamForm implements OnInit, OnDestroy {
     this.examForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
       subjectId: [null, Validators.required],
-      duration: [
-        60,
-        [Validators.required, Validators.min(1), Validators.max(300)],
-      ],
+      duration: [60, [Validators.required, Validators.min(1), Validators.max(300)]],
       isPublished: [false],
-      // totalMarks: [0, [Validators.required, Validators.min(0)]],
-      passMark: [
-        0,
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
+      passMark: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
     });
 
-    // Listen for subject changes to load questions
     this.examForm.get('subjectId')?.valueChanges.subscribe((subjectId) => {
       if (subjectId) {
         this.loadQuestionsBySubject(subjectId);
@@ -118,28 +159,23 @@ export class ExamForm implements OnInit, OnDestroy {
     this.isLoadingQuestions = true;
     this.cdr.markForCheck();
 
-    this.subscription = this.questionService
-      .filterQuestions(subjectId)
-      .subscribe({
-        next: (questions: IQuestion[]) => {
-          this.availableQuestions = questions;
-          this.isLoadingQuestions = false;
-          this.cdr.markForCheck();
-          console.log('Loaded questions:', questions);
-        },
-        error: (error) => {
-          console.error('Error loading questions:', error);
-          this.isLoadingQuestions = false;
-          this.cdr.markForCheck();
-        },
-      });
+    this.subscription = this.questionService.filterQuestions(subjectId).subscribe({
+      next: (questions: IQuestion[]) => {
+        this.availableQuestions = questions;
+        this.isLoadingQuestions = false;
+        this.cdr.markForCheck();
+        console.log('Loaded questions:', questions);
+      },
+      error: (error) => {
+        console.error('Error loading questions:', error);
+        this.isLoadingQuestions = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   addQuestionToExam(question: IQuestion): void {
-    // Check if question is already selected
-    const isAlreadySelected = this.selectedQuestions.some(
-      (q) => q.id === question.id
-    );
+    const isAlreadySelected = this.selectedQuestions.some((q) => q.id === question.id);
 
     if (!isAlreadySelected) {
       this.selectedQuestions.push(question);
@@ -151,9 +187,7 @@ export class ExamForm implements OnInit, OnDestroy {
   }
 
   removeQuestionFromExam(questionId: number): void {
-    this.selectedQuestions = this.selectedQuestions.filter(
-      (q) => q.id !== questionId
-    );
+    this.selectedQuestions = this.selectedQuestions.filter((q) => q.id !== questionId);
     this.refreshQuestionsCount();
     console.log('Removed question from exam:', questionId);
   }
@@ -167,13 +201,9 @@ export class ExamForm implements OnInit, OnDestroy {
   }
 
   getTotalScore(): number {
-    return this.selectedQuestions.reduce(
-      (total, question) => total + question.score,
-      0
-    );
+    return this.selectedQuestions.reduce((total, question) => total + question.score, 0);
   }
 
-  // Method to refresh the questions count badge
   refreshQuestionsCount(): void {
     this.cdr.markForCheck();
   }
@@ -185,7 +215,7 @@ export class ExamForm implements OnInit, OnDestroy {
 
       const formValue = this.examForm.value;
       const examData: IExamForm = {
-        id: 0,
+        id: this.examId || 0,
         name: formValue.title,
         subjectId: formValue.subjectId,
         durationInMinites: formValue.duration,
@@ -196,35 +226,26 @@ export class ExamForm implements OnInit, OnDestroy {
         examQuestions: this.selectedQuestions.map((q) => q.id),
       };
 
-      console.log('Creating exam with data:', examData);
+      const request = this.examId !== 0
+        ? this.examService.updateExam(this.examId, examData)
+        : this.examService.addExam(examData);
 
-      // Simulate API call with proper error handling
-      try {
-        // TODO: Replace with actual exam creation service call
-        this.examService.addExam(examData).subscribe({
-          next: (response) => {
-            console.log('Exam created successfully:', response);
-            this.isSubmitting = false;
-            this.cdr.markForCheck();
-            this.router.navigate(['/admin/dashboard']);
-          },
-          error: (error) => {
-            console.error('Error creating exam:', error);
-            this.isSubmitting = false;
-            this.cdr.markForCheck();
-            alert('Failed to create exam. Please try again.');
-          },
-        });
-      } catch (error) {
-        console.error('Error in form submission:', error);
-        this.isSubmitting = false;
-        this.cdr.markForCheck();
-        alert('An error occurred while creating the exam. Please try again.');
-      }
+      request.subscribe({
+        next: (response) => {
+          console.log('Exam saved successfully:', response);
+          this.isSubmitting = false;
+          this.cdr.markForCheck();
+          this.router.navigate(['/admin/dashboard']);
+        },
+        error: (error) => {
+          console.error('Error saving exam:', error);
+          this.isSubmitting = false;
+          this.cdr.markForCheck();
+          alert('Failed to save exam. Please try again.');
+        },
+      });
     } else {
-      console.log('Form validation failed');
       this.markFormGroupTouched();
-
       if (this.selectedQuestions.length === 0) {
         alert('Please select at least one question for the exam.');
       } else if (!this.examForm.valid) {
