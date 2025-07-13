@@ -1,4 +1,6 @@
-<div class="min-vh-100 bg-light">
+
+
+<div class="min-vh-100 bg-light" *ngIf="!isLoading">
   <header
     class="bg-white shadow-sm border-bottom border-light-subtle sticky-top"
   >
@@ -6,23 +8,28 @@
       <div class="d-flex align-items-center justify-content-between py-3">
         <div>
           <h1 class="fs-4 fw-semibold text-dark mb-0">
-            Mathematics Final Exam
+            {{ examDetails?.name }}
           </h1>
-          <p class="text-secondary mb-0">Question 1 of 10</p>
+          <p class="text-secondary mb-0">
+            Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
+          </p>
         </div>
         <div class="d-flex align-items-center gap-4">
           <div class="d-flex align-items-center gap-2 text-danger">
             <i data-lucide="clock" class="icon-size-5"></i>
-            <span class="font-monospace fs-5 fw-semibold">01:59:59</span>
+            <span class="font-monospace fs-5 fw-semibold"
+              >{{ formattedTime }}</span
+            >
           </div>
           <button
             type="button"
             class="btn btn-primary d-flex align-items-center"
             data-bs-toggle="modal"
             data-bs-target="#submitExamModal"
+            [disabled]="isSubmitting"
           >
             <i data-lucide="send" class="icon-size-4 me-2"></i>
-            Submit Exam
+            {{ isSubmitting ? 'Submitting...' : 'Submit Exam' }}
           </button>
         </div>
       </div>
@@ -43,46 +50,31 @@
               class="d-flex align-items-center justify-content-between small"
             >
               <span class="text-secondary">Answered:</span>
-              <span class="fw-semibold text-success">0/10</span>
+              <span class="fw-semibold text-success"
+                >{{ answeredCount }}/{{ questions.length }}</span
+              >
             </div>
             <div
               class="d-flex align-items-center justify-content-between small"
             >
               <span class="text-secondary">Flagged:</span>
-              <span class="fw-semibold text-warning">0</span>
+              <span class="fw-semibold text-warning">{{ flaggedCount }}</span>
             </div>
           </div>
 
           <div class="d-grid questions-grid gap-2">
-            <button type="button" class="btn question-btn active btn-primary">
-              1
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              2
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              3
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              4
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              5
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              6
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              7
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              8
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              9
-            </button>
-            <button type="button" class="btn question-btn unanswered btn-light">
-              10
+            <button
+              *ngFor="let question of questions; let i = index"
+              type="button"
+              class="btn question-btn"
+              [class.active]="i === currentQuestionIndex"
+              [class.btn-primary]="i === currentQuestionIndex"
+              [class.btn-success]="isQuestionAnswered(i) && i !== currentQuestionIndex"
+              [class.btn-warning]="isQuestionFlagged(i) && !isQuestionAnswered(i) && i !== currentQuestionIndex"
+              [class.btn-light]="!isQuestionAnswered(i) && !isQuestionFlagged(i) && i !== currentQuestionIndex"
+              (click)="goToQuestion(i)"
+            >
+              {{ i + 1 }}
             </button>
           </div>
 
@@ -104,78 +96,48 @@
       </div>
 
       <div class="col-12 col-lg-9">
-        <div class="card shadow-sm rounded-xl border border-light-subtle p-5">
+        <!-- Question Display -->
+        <div
+          class="card shadow-sm rounded-xl border border-light-subtle p-5"
+          *ngIf="currentQuestion"
+        >
           <div class="d-flex justify-content-between align-items-start mb-4">
-            <h2 class="fs-4 fw-semibold text-dark mb-0">Question 1</h2>
+            <h2 class="fs-4 fw-semibold text-dark mb-0">
+              Question {{ currentQuestionIndex + 1 }}
+            </h2>
             <button
               type="button"
               class="btn btn-light p-2 rounded-lg text-secondary flag-btn"
+              [class.btn-warning]="isQuestionFlagged(currentQuestionIndex)"
+              (click)="toggleFlag()"
             >
               <i data-lucide="flag" class="icon-size-5"></i>
             </button>
           </div>
 
           <div class="mb-4">
-            <p class="fs-5 text-dark lh-base">
-              What is the derivative of x² + 3x + 2?
-            </p>
+            <p class="fs-5 text-dark lh-base">{{ currentQuestion.title }}</p>
           </div>
 
           <div class="d-grid gap-3 mb-5">
             <label
+              *ngFor="let option of currentQuestion.options; let optionIndex = index"
               class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
+              [class.selected]="isAnswerSelected(currentQuestion.id, option.id)"
             >
               <div class="d-flex align-items-center">
                 <input
                   type="radio"
-                  name="question-1"
-                  value="2x + 3"
+                  [name]="'question-' + currentQuestion.id"
+                  [value]="option.id"
                   class="form-check-input mt-0 me-3"
-                  id="option1"
+                  [id]="'option' + option.id"
+                  [checked]="isAnswerSelected(currentQuestion.id, option.id)"
+                  (change)="selectAnswer(currentQuestion.id, option.id)"
                 />
-                <span class="ms-1 text-dark fw-medium">A. 2x + 3</span>
-              </div>
-            </label>
-            <label
-              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
-            >
-              <div class="d-flex align-items-center">
-                <input
-                  type="radio"
-                  name="question-1"
-                  value="x + 3"
-                  class="form-check-input mt-0 me-3"
-                  id="option2"
-                />
-                <span class="ms-1 text-dark fw-medium">B. x + 3</span>
-              </div>
-            </label>
-            <label
-              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
-            >
-              <div class="d-flex align-items-center">
-                <input
-                  type="radio"
-                  name="question-1"
-                  value="2x + 2"
-                  class="form-check-input mt-0 me-3"
-                  id="option3"
-                />
-                <span class="ms-1 text-dark fw-medium">C. 2x + 2</span>
-              </div>
-            </label>
-            <label
-              class="d-block p-4 border rounded-lg cursor-pointer transition-all option-label"
-            >
-              <div class="d-flex align-items-center">
-                <input
-                  type="radio"
-                  name="question-1"
-                  value="x² + 3"
-                  class="form-check-input mt-0 me-3"
-                  id="option4"
-                />
-                <span class="ms-1 text-dark fw-medium">D. x² + 3</span>
+                <span class="ms-1 text-dark fw-medium">
+                  {{ getOptionLetter(optionIndex) }}. {{ option.title }}
+                </span>
               </div>
             </label>
           </div>
@@ -184,7 +146,8 @@
             <button
               type="button"
               class="btn btn-outline-secondary d-flex align-items-center px-4 py-2"
-              disabled
+              [disabled]="currentQuestionIndex === 0"
+              (click)="previousQuestion()"
             >
               <i data-lucide="chevron-left" class="icon-size-4 me-2"></i>
               Previous
@@ -192,14 +155,61 @@
             <button
               type="button"
               class="btn btn-primary d-flex align-items-center px-4 py-2"
+              [disabled]="currentQuestionIndex === questions.length - 1"
+              (click)="nextQuestion()"
             >
               Next
               <i data-lucide="chevron-right" class="icon-size-4 ms-2"></i>
             </button>
           </div>
         </div>
+        
+        <!-- No Questions Available -->
+        <div
+          class="card shadow-sm rounded-xl border border-light-subtle p-5"
+          *ngIf="!isLoading && questions.length === 0"
+        >
+          <div class="text-center">
+            <i data-lucide="alert-circle" class="icon-size-8 text-warning mb-3"></i>
+            <h4 class="text-secondary">No Questions Available</h4>
+            <p class="text-muted">This exam doesn't have any questions yet.</p>
+          </div>
+        </div>
+        
+        <!-- Questions Loading -->
+        <div
+          class="card shadow-sm rounded-xl border border-light-subtle p-5"
+          *ngIf="!isLoading && questions.length > 0 && !currentQuestion"
+        >
+          <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <h4 class="text-secondary">Preparing Questions...</h4>
+            <p class="text-muted">Please wait while we prepare your questions.</p>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div
+  class="min-vh-100 d-flex align-items-center justify-content-center"
+  *ngIf="isLoading"
+>
+  <div class="text-center">
+    <div class="spinner-border text-primary mb-3" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h4 class="text-secondary">Loading Exam...</h4>
+    <p class="text-muted">Please wait while we load your exam</p>
+    
+    <!-- Debug button - remove in production -->
+    <button class="btn btn-outline-warning mt-3" (click)="testLoadingState()">
+      Debug: Force Stop Loading
+    </button>
   </div>
 </div>
 
@@ -228,8 +238,8 @@
       </div>
       <div class="modal-body pt-0">
         <p class="text-secondary mb-4">
-          Are you sure you want to submit your exam? You have answered 0 out of
-          10 questions.
+          Are you sure you want to submit your exam? You have answered {{
+          answeredCount }} out of {{ questions.length }} questions.
         </p>
         <div class="d-flex gap-3">
           <button
@@ -239,8 +249,14 @@
           >
             Continue Exam
           </button>
-          <button type="button" class="btn btn-primary flex-grow-1 px-4 py-2">
-            Submit
+          <button
+            type="button"
+            class="btn btn-primary flex-grow-1 px-4 py-2"
+            (click)="confirmSubmit()"
+            [disabled]="isSubmitting"
+            data-bs-dismiss="modal"
+          >
+            {{ isSubmitting ? 'Submitting...' : 'Submit' }}
           </button>
         </div>
       </div>

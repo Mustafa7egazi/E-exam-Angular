@@ -10,6 +10,8 @@ import { CreateSubjectComponent } from './pages/adminDashboard/subjects/create-s
 import { QuestionMainSection } from './pages/adminDashboard/questions/question-main-section/question-main-section';
 import { CreateQuestionComponent } from './pages/adminDashboard/questions/create-question/create-question';
 import { EditQuestionComponent } from './pages/adminDashboard/questions/edit-question/edit-question';
+import { ExamResults } from './pages/studentDashboard/exam-results/exam-results';
+import { Exam } from './pages/studentDashboard/exam/exam';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -25,5 +27,7 @@ export const routes: Routes = [
   { path: 'admin/questions/create', component: CreateQuestionComponent },
   { path: 'admin/questions/edit/:id', component: EditQuestionComponent },
   { path: 'admin/subjects/create', component: CreateSubjectComponent },
+  { path: 'student/exams/:id', component: Exam },
+  { path: 'student/exam-results', component: ExamResults },
   { path: '**', component: NotFound },
 ];
