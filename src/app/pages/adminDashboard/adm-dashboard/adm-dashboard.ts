@@ -4,6 +4,7 @@ import { Examservice } from '../../../services/examservice';
 import { IExamDetails, IExamList } from '../../../models/Exam/iexam-list';
 import { IExamDisplay } from '../../../models/Exam/iexam-display';
 import { Subscription } from 'rxjs';
+import { StudentCount } from '../../../services/student-count';
 
 @Component({
   selector: 'app-adm-dashboard',
@@ -14,12 +15,14 @@ import { Subscription } from 'rxjs';
 export class AdmDashboard implements OnInit, OnDestroy {
   exams: IExamList[] = [];
   totalExams: number = 0;
+  studentCount: number = 0;
   private subscription!: Subscription;
   selectedExam!: IExamDetails | null;
   constructor(
     private examService: Examservice,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private studentCountService: StudentCount
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +44,7 @@ export class AdmDashboard implements OnInit, OnDestroy {
         console.error('Error fetching total exams:', error);
       },
     });
+    this.getStudentCount();
   }
 
   ngOnDestroy(): void {
@@ -56,6 +60,14 @@ export class AdmDashboard implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.log('Can not Get Exam');
+      },
+    });
+  }
+  getStudentCount() {
+    this.studentCountService.getStudentCount().subscribe({
+      next: (data) => {
+        this.studentCount = data;
+        this.cdr.detectChanges();
       },
     });
   }
