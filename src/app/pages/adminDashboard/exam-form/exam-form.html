@@ -204,7 +204,7 @@
               </div>
 
               <!-- Selected Questions Preview -->
-              <div *ngIf="selectedQuestions.length > 0" class="mt-4">
+              <div *ngIf="selectedQuestions.length > 0 && examForm.get('subjectId') " class="mt-4">
                 <h5 class="fw-semibold mb-3">
                   <i class="fas fa-check-circle me-2 text-success"></i>
                   Selected Questions ({{ getSelectedQuestionsCount() }})
