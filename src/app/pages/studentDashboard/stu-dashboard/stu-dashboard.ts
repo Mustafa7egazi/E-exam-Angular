@@ -1,17 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { StudentExamsService } from '../../../services/student-exams-service';
-import { AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-stu-dashboard',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './stu-dashboard.html',
   styleUrl: './stu-dashboard.css',
 })
 export class StuDashboard implements OnInit {
   availableStudentExams: any[] = [];
   takenExams: any[] = [];
-  pendingExams!: number;
+  pendingExams: number = 0;
 
   constructor(
     private studentExamsService: StudentExamsService,
@@ -44,4 +44,3 @@ export class StuDashboard implements OnInit {
     });
   }
 }
-
