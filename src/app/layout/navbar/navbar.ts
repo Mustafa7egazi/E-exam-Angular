@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +8,23 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {}
+export class Navbar implements OnInit {
+  isLoggedIn!: boolean;
+  userFullName: string | null = null;
+  userRole: string | null = null;
+  constructor(private authService: AuthService, private cdr: ChangeDetectorRef, private router: Router) { }
+
+  ngOnInit(): void {
+    this.userFullName = this.authService.getFullName();
+    this.userRole = this.authService.getUserRole();
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.cdr.detectChanges();
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/home']).then(() => {
+      window.location.reload();
+    });
+  }
+}

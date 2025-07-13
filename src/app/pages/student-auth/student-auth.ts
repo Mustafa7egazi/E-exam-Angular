@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { UserRegisterDTO } from '../../models/User/user-register-dto';
 import { AuthService } from '../../services/auth-service';
 import { UserLoginDTO } from '../../models/User/user-login-dto';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -22,20 +23,15 @@ export class StudentAuth {
     email: new FormControl<string>('', Validators.required),
     password: new FormControl<string>('', Validators.required),
     confirmPassword: new FormControl<string>('', Validators.required)
-    // firstName: new FormControl<string>(''),
-    // lastName: new FormControl<string>(''),
-    // dateOfBirth: new FormControl<Date>(new Date(2000, 0, 1)),
-    // email: new FormControl<string>('',),
-    // password: new FormControl<string>('',),
-    // confirmPassword: new FormControl<string>('',)
   });
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl<string>('', Validators.required),
-    password: new FormControl<string>('', Validators.required)
+    password: new FormControl<string>('', Validators.required),
+    role: new FormControl<string>('student', Validators.required)
   });
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   onSubmitRegister() {
     if (this.registerForm.valid) {
@@ -44,7 +40,7 @@ export class StudentAuth {
       this.authService.register(this.userInput).subscribe({
         next: (response) => {
           console.log('Registration successful, this is the api response (UserStudentDTO object): ', response);
-          // Handle successful registration, e.g., navigate to login page or show a success message
+          this.router.navigate(['/student/login']);
         },
         error: (error) => {
           console.error('Registration failed', error);
@@ -62,6 +58,10 @@ export class StudentAuth {
       this.authService.login(this.userLoginInput).subscribe({
         next: (response) => {
           console.log('Login successful, this is the api response (token): ', response);
+          localStorage.setItem('token', response);
+          this.router.navigate(['/home']).then(() => {
+            window.location.reload();
+          });
         },
         error: (error) => {
           console.error('Login failed', error);

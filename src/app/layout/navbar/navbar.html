@@ -7,21 +7,25 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item me-1 mb-1">
-          <a class="nav-link fw-medium me-2" routerLink="/student/login" routerLinkActive="active">Login</a>
-        </li>
+        @if(!isLoggedIn){
+          <li class="nav-item me-1 mb-1">
+            <a class="nav-link fw-medium me-2" routerLink="/student/login" routerLinkActive="active">Login</a>
+          </li>
+        }
         <li class="nav-item me-1 mb-1">
           <button type="button" class="btn btn-primary">
             <i class="fa-solid fa-user"></i>
-            UserName <span class="badge text-bg-secondary">UserRole</span>
+            {{userFullName}} <span class="badge text-bg-secondary">{{userRole}}</span>
           </button>
         </li>
         <li class="nav-item me-1 mb-1">
-          <a class="btn btn-primary" routerLink="/student/register" routerLinkActive="active">Register</a>
+          <a class="btn btn-outline-primary" routerLink="/student/register" routerLinkActive="active">Register</a>
         </li>
-        <li class="nav-item me-1 mb-1">
-          <a class="btn btn-primary">Logout <i class="fa-solid fa-right-from-bracket"></i></a>
-        </li>
+        @if(isLoggedIn){
+          <li class="nav-item me-1 mb-1">
+            <button class="btn btn-outline-primary" (click)="logout()">Logout <i class="fa-solid fa-right-from-bracket"></i></button>
+          </li>
+        }
       </ul>
     </div>
   </div>
