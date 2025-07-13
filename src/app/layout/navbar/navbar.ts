@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { StorageService } from '../../services/storageservice';
 import { ILoginData } from '../../models/User/ilogin-data';
@@ -10,12 +10,24 @@ import { ILoginData } from '../../models/User/ilogin-data';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar implements OnInit {
-  storedDate: ILoginData | null = null;
+export class Navbar implements OnInit, OnDestroy {
+  userData: ILoginData | null = null;
+  userName: string = '';
+  private userSub: any;
   constructor(private storageService: StorageService, private router: Router) {}
   ngOnInit(): void {
-    this.storedDate = this.storageService.getUser();
+    this.userSub = this.storageService.user$.subscribe((user) => {
+      this.userData = { token: '', user };
+      this.userName = user?.name || '';
+    });
   }
+
+  ngOnDestroy(): void {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
+  }
+
   logout() {
     this.storageService.removeUser();
     this.storageService.removeToken();

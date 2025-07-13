@@ -12,6 +12,7 @@ import { CreateQuestionComponent } from './pages/adminDashboard/questions/create
 import { EditQuestionComponent } from './pages/adminDashboard/questions/edit-question/edit-question';
 import { ExamResults } from './pages/studentDashboard/exam-results/exam-results';
 import { Exam } from './pages/studentDashboard/exam/exam';
+import { AdminGuard, StudentGuard } from './services/auth-service';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,15 +20,47 @@ export const routes: Routes = [
   { path: 'admin/login', component: AdminAuth },
   { path: 'student/login', component: StudentAuth },
   { path: 'student/register', component: StudentAuth },
-  { path: 'admin/dashboard', component: AdmDashboard },
-  { path: 'admin/exam', component: ExamForm },
-  { path: 'admin/exams/edit/:id', component: ExamForm },
-  { path: 'student-dashboard', component: StuDashboard },
-  { path: 'admin/questions', component: QuestionMainSection },
-  { path: 'admin/questions/create', component: CreateQuestionComponent },
-  { path: 'admin/questions/edit/:id', component: EditQuestionComponent },
-  { path: 'admin/subjects/create', component: CreateSubjectComponent },
-  { path: 'student/exams/:id', component: Exam },
-  { path: 'student/exam-results', component: ExamResults },
+  {
+    path: 'admin/dashboard',
+    component: AdmDashboard,
+    canActivate: [AdminGuard],
+  },
+  { path: 'admin/exam', component: ExamForm, canActivate: [AdminGuard] },
+  {
+    path: 'admin/exams/edit/:id',
+    component: ExamForm,
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'admin/questions',
+    component: QuestionMainSection,
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'admin/questions/create',
+    component: CreateQuestionComponent,
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'admin/questions/edit/:id',
+    component: EditQuestionComponent,
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'admin/subjects/create',
+    component: CreateSubjectComponent,
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'student-dashboard',
+    component: StuDashboard,
+    canActivate: [StudentGuard],
+  },
+  { path: 'student/exams/:id', component: Exam, canActivate: [StudentGuard] },
+  {
+    path: 'student/exam-results',
+    component: ExamResults,
+    canActivate: [StudentGuard],
+  },
   { path: '**', component: NotFound },
 ];

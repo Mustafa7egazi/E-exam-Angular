@@ -1,7 +1,7 @@
 <div class="min-vh-100 bg-light py-5">
   <div class="container px-4 px-md-6 px-lg-8">
     <div class="mb-5">
-      <h1 class="fs-2 fw-bold text-dark">Welcome back, [Username]!</h1>
+      <h1 class="fs-2 fw-bold text-dark">Welcome back, {{userName}}</h1>
       <p class="text-secondary mt-2">
         Here's your exam dashboard and recent activity.
       </p>
@@ -13,11 +13,7 @@
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
               <div class="bg-primary-subtle p-3 rounded-3">
-                <i
-                  data-lucide="book-open"
-                  class="text-primary"
-                  style="width: 24px; height: 24px"
-                ></i>
+                <i data-lucide="book-open" class="text-primary" style="width: 24px; height: 24px"></i>
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Total Exams</p>
@@ -35,11 +31,7 @@
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
               <div class="bg-success-subtle p-3 rounded-3">
-                <i
-                  data-lucide="check-circle"
-                  class="text-success"
-                  style="width: 24px; height: 24px"
-                ></i>
+                <i data-lucide="check-circle" class="text-success" style="width: 24px; height: 24px"></i>
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Completed</p>
@@ -55,11 +47,7 @@
           <div class="card-body p-4">
             <div class="d-flex align-items-center">
               <div class="bg-warning-subtle p-3 rounded-3">
-                <i
-                  data-lucide="clock"
-                  class="text-warning"
-                  style="width: 24px; height: 24px"
-                ></i>
+                <i data-lucide="clock" class="text-warning" style="width: 24px; height: 24px"></i>
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Pending</p>
@@ -110,6 +98,7 @@
                       <i data-lucide="play" class="text-success exam-icon"></i>
                       <h3 class="fs-6 fw-semibold text-dark mb-0">
                         {{exam.name}}
+                        {{exam.name}}
                       </h3>
                       @if (exam.isPublished) {
                       <span
@@ -123,6 +112,7 @@
                     >
                       <span class="d-flex align-items-center">
                         <i data-lucide="book-open" class="detail-icon"></i>
+                        {{exam.subject}}
                         {{exam.subject}}
                       </span>
                       <span class="d-flex align-items-center">
@@ -158,6 +148,7 @@
                 <p class="text-secondary">Loading exams...</p>
               </div>
               }
+
 
               <!-- <div class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100">
                 <div class="d-flex align-items-center justify-content-between">

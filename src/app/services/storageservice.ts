@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ILoginData } from '../models/User/ilogin-data';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
   private tokenKey = 'token';
+
+  private userSubject: BehaviorSubject<any>;
+  public user$: Observable<any>;
+
+  constructor() {
+    const user = localStorage.getItem('user');
+    this.userSubject = new BehaviorSubject<any>(user ? JSON.parse(user) : null);
+    this.user$ = this.userSubject.asObservable();
+  }
 
   setToken(token: string, days: number = 20): void {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -31,12 +41,18 @@ export class StorageService {
   }
   setUser(response: ILoginData) {
     localStorage.setItem('user', JSON.stringify(response.user));
+    this.userSubject.next(response.user);
   }
   getUser(): ILoginData | null {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    const data: ILoginData = {
+      token: '',
+      user: user ? JSON.parse(user) : null,
+    };
+    return data;
   }
   removeUser() {
     localStorage.removeItem('user');
+    this.userSubject.next(null);
   }
 }
