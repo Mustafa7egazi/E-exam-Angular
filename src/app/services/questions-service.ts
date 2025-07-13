@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { IQuestion } from '../models/Questions/IQuestions';
 import { ICreateOption } from '../models/Option/icreate-option';
 import { ICreateQuestion } from '../models/Questions/icreate-question';
-import { environment } from '../enviroment/environment';
+import { environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root'

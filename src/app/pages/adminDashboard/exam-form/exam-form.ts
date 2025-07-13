@@ -229,7 +229,7 @@ loadQuestionsBySubject(subjectId: number): void {
         subjectId: formValue.subjectId,
         durationInMinites: formValue.duration,
         isPublished: formValue.isPublished,
-        passMark: Math.floor(this.getTotalScore() * (formValue.passMark / 100)),
+        passMark: Math.ceil(this.getTotalScore() * (formValue.passMark / 100)),
         totalMarks: this.getTotalScore(),
         teacherId: 1,
         examQuestions: this.selectedQuestions.map((q) => q.id),

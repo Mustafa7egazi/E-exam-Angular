@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Examservice } from '../../../services/examservice';
-import { IExamList } from '../../../models/Exam/iexam-list';
+import { IExamDetails, IExamList } from '../../../models/Exam/iexam-list';
 import { IExamDisplay } from '../../../models/Exam/iexam-display';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,7 @@ export class AdmDashboard implements OnInit, OnDestroy {
   exams: IExamList[] = [];
   totalExams: number = 0;
   private subscription!: Subscription;
-  selectedExam!: IExamDisplay | null;
+  selectedExam!: IExamDetails | null;
   constructor(
     private examService: Examservice,
     private cdr: ChangeDetectorRef,

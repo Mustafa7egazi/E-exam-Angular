@@ -8,7 +8,7 @@ import {
   IExamDetails,
   IExamQuestion,
   IExamAnswer,
-} from '../../../models/iexam-list';
+} from '../../../models/Exam/iexam-list';
 
 @Component({
   selector: 'app-exam',

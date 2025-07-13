@@ -1,21 +1,13 @@
 import { IQuestionDisplay } from "../Questions/iquestion-display";
+import { IExamQuestion } from "./iexam-list";
 
 export interface IExamDisplay {
   id: number;
   name: string;
-  totalMarks: string;
+  totalMarks: number;
   subject: string;
   isPublished: boolean;
   questionsCount: number;
   durationInMinites: number;
-  questions: IQuestionDisplay[];
+  questions: IExamQuestion[];
 }
-  // id: number;
-  // name: string;
-  // totalMarks: number;
-  // durationInMinites: number;
-  // passMark: number;
-  // isPublished: boolean;
-  // subjectId: number;
-  // teacherId: number;
-  // examQuestions: number[];
