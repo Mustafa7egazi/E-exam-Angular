@@ -30,7 +30,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ExamForm implements OnInit, OnDestroy {
   exams: IExamList[] = [];
   examId: number = 0;
-
+  subjectfromEditRequest: number = 0;
   examForm!: FormGroup;
   isSubmitting: boolean = false;
 
@@ -80,6 +80,7 @@ export class ExamForm implements OnInit, OnDestroy {
   loadExamForEdit(id: number): void {
     this.examService.getExamForUpdateById(id).subscribe({
       next: async (exam) => {
+        this.subjectfromEditRequest = exam.subjectId;
         this.examForm.patchValue({
           title: exam.name,
           subjectId: exam.subjectId,
@@ -154,25 +155,33 @@ export class ExamForm implements OnInit, OnDestroy {
       },
     });
   }
+loadQuestionsBySubject(subjectId: number): void {
+  this.isLoadingQuestions = true;
+  this.cdr.markForCheck();
 
-  loadQuestionsBySubject(subjectId: number): void {
-    this.isLoadingQuestions = true;
-    this.cdr.markForCheck();
+  this.subscription = this.questionService.filterQuestions(subjectId).subscribe({
+    next: (questions: IQuestion[]) => {
+      this.availableQuestions = questions;
 
-    this.subscription = this.questionService.filterQuestions(subjectId).subscribe({
-      next: (questions: IQuestion[]) => {
-        this.availableQuestions = questions;
-        this.isLoadingQuestions = false;
-        this.cdr.markForCheck();
-        console.log('Loaded questions:', questions);
-      },
-      error: (error) => {
-        console.error('Error loading questions:', error);
-        this.isLoadingQuestions = false;
-        this.cdr.markForCheck();
-      },
-    });
-  }
+      if (this.examId !== 0) {
+        if (this.subjectfromEditRequest !== subjectId) {
+          this.selectedQuestions = [];
+        }
+      } else {
+        this.selectedQuestions = [];
+      }
+
+      this.isLoadingQuestions = false;
+      this.cdr.markForCheck();
+      console.log('Loaded questions:', questions);
+    },
+    error: (error) => {
+      console.error('Error loading questions:', error);
+      this.isLoadingQuestions = false;
+      this.cdr.markForCheck();
+    },
+  });
+}
 
   addQuestionToExam(question: IQuestion): void {
     const isAlreadySelected = this.selectedQuestions.some((q) => q.id === question.id);
