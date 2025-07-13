@@ -9,10 +9,19 @@
         Streamline your testing process with our comprehensive exam management
         system designed for educational institutions and organizations.
       </p>
+      @if (!userData?.user) {
       <div class="d-flex flex-column flex-sm-row gap-4 justify-content-center">
-        <a class="btn btn-custom-white" routerLink="/student/register" routerLinkActive="active"> Get Started </a>
-        <a class="btn btn-outline-white-custom" routerLink="/student/login" routerLinkActive="active"> Login </a>
+        <button class="btn btn-custom-white" (click)="navigateToRegister()">
+          Get Started
+        </button>
+        <button
+          class="btn btn-outline-white-custom"
+          (click)="navigateToLogin()"
+        >
+          Login
+        </button>
       </div>
+      }
     </div>
   </section>
 
@@ -112,6 +121,7 @@
     </div>
   </section>
 
+  @if (!userData?.user) {
   <section class="py-5 bg-light">
     <div class="container" style="max-width: 896px">
       <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -133,13 +143,18 @@
                   online exams
                 </li>
                 <li>
-                  <i class="fa-solid fa-chart-line text-blue-500-custom"></i>View detailed results
+                  <i class="fa-solid fa-chart-line text-blue-500-custom"></i
+                  >View detailed results
                 </li>
                 <li>
-                  <i class="fa-solid fa-book-open text-blue-500-custom"></i>Track your progress
+                  <i class="fa-solid fa-book-open text-blue-500-custom"></i
+                  >Track your progress
                 </li>
               </ul>
-              <button class="btn w-100 btn-custom-gradient" routerLink="/student/login" routerLinkActive="active">
+              <button
+                class="btn w-100 btn-custom-gradient"
+                (click)="navigateToRegister()"
+              >
                 Continue as Student
               </button>
             </div>
@@ -164,14 +179,19 @@
                   students
                 </li>
                 <li>
-                  <i class="fa-solid fa-book-open text-purple-500-custom"></i>Create &amp; edit exams
+                  <i class="fa-solid fa-book-open text-purple-500-custom"></i
+                  >Create &amp; edit exams
                 </li>
                 <li>
-                  <i class="fa-solid fa-chart-line text-purple-500-custom"></i>Analytics &amp; reports
+                  <i class="fa-solid fa-chart-line text-purple-500-custom"></i
+                  >Analytics &amp; reports
                 </li>
               </ul>
-              <button class="btn w-100 btn-custom-gradient btn-purple-gradient" routerLink="/admin/login"
-                routerLinkActive="active">
+              <button
+                class="btn w-100 btn-custom-gradient btn-purple-gradient"
+                routerLink="/admin/login"
+                routerLinkActive="active"
+              >
                 Continue as Admin
               </button>
             </div>
@@ -180,6 +200,7 @@
       </div>
     </div>
   </section>
+  }
 
   <section class="cta-section">
     <div class="container text-center" style="max-width: 896px">
@@ -190,7 +211,15 @@
         Join thousands of educators who trust ExamPortal for their online
         testing needs.
       </p>
-      <a class="cta-button-custom" routerLink="/student/register" routerLinkActive="active"> Start Your Free Trial </a>
+      @if (!userData?.user) {
+      <a
+        class="cta-button-custom"
+        routerLink="/student/register"
+        routerLinkActive="active"
+      >
+        Start Your Free Trial
+      </a>
+      }
     </div>
   </section>
 </div>

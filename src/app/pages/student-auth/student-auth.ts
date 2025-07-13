@@ -4,11 +4,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserRegisterDTO } from '../../models/User/user-register-dto';
 import { AuthService } from '../../services/auth-service';
 import { UserLoginDTO } from '../../models/User/user-login-dto';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { StorageService } from '../../services/storageservice';
 
 @Component({
@@ -18,9 +18,10 @@ import { StorageService } from '../../services/storageservice';
   templateUrl: './student-auth.html',
   styleUrls: ['./student-auth.css'],
 })
-export class StudentAuth {
+export class StudentAuth implements OnInit {
   userInput!: UserRegisterDTO;
   userLoginInput!: UserLoginDTO;
+  showRegisterForm: boolean = false;
 
   registerForm: FormGroup = new FormGroup({
     firstName: new FormControl<string>('', Validators.required),
@@ -42,9 +43,65 @@ export class StudentAuth {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private storageService: StorageService,
     private chr: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    // Check if current route is /student/register
+    const currentUrl = this.router.url;
+    if (currentUrl === '/student/register') {
+      this.showRegisterForm = true;
+      // Use setTimeout to ensure DOM is ready before switching tabs
+      setTimeout(() => {
+        this.switchToRegisterForm();
+      }, 100);
+      return;
+    }
+
+    // Check navigation state to see if register form should be shown
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.showRegisterForm = navigation.extras.state['showRegisterForm'] || false;
+      if (this.showRegisterForm) {
+        // Use setTimeout to ensure DOM is ready before switching tabs
+        setTimeout(() => {
+          this.switchToRegisterForm();
+        }, 100);
+      }
+    }
+  }
+
+  switchToRegisterForm(): void {
+    // Remove active class from login tab and add to register tab
+    const loginTab = document.getElementById('login-tab');
+    const registerTab = document.getElementById('register-tab');
+    const loginContent = document.getElementById('login');
+    const registerContent = document.getElementById('register');
+
+    if (loginTab && registerTab && loginContent && registerContent) {
+      loginTab.classList.remove('active');
+      registerTab.classList.add('active');
+      loginContent.classList.remove('show', 'active');
+      registerContent.classList.add('show', 'active');
+    }
+  }
+
+  switchToLoginForm(): void {
+    // Remove active class from register tab and add to login tab
+    const loginTab = document.getElementById('login-tab');
+    const registerTab = document.getElementById('register-tab');
+    const loginContent = document.getElementById('login');
+    const registerContent = document.getElementById('register');
+
+    if (loginTab && registerTab && loginContent && registerContent) {
+      registerTab.classList.remove('active');
+      loginTab.classList.add('active');
+      registerContent.classList.remove('show', 'active');
+      loginContent.classList.add('show', 'active');
+    }
+  }
 
   onSubmitRegister() {
     if (this.registerForm.valid) {
