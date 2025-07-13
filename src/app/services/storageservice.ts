@@ -34,7 +34,11 @@ export class StorageService {
   }
   getUser(): ILoginData | null {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    const data: ILoginData = {
+      token: '',
+      user: user ? JSON.parse(user) : null,
+    };
+    return data;
   }
   removeUser() {
     localStorage.removeItem('user');

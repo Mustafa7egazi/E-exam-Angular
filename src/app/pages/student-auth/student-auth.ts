@@ -4,7 +4,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { UserRegisterDTO } from '../../models/User/user-register-dto';
 import { AuthService } from '../../services/auth-service';
 import { UserLoginDTO } from '../../models/User/user-login-dto';
@@ -48,7 +48,8 @@ export class StudentAuth {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private chr: ChangeDetectorRef
   ) {}
 
   onSubmitRegister() {
@@ -57,6 +58,7 @@ export class StudentAuth {
       this.authService.register(this.userInput).subscribe({
         next: (response) => {
           // Handle successful registration, e.g., navigate to login page or show a success message
+          this.chr.detectChanges();
           this.router.navigate(['/student-auth/login']);
         },
         error: (error) => {

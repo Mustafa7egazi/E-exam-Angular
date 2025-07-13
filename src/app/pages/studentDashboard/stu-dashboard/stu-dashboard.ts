@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { StudentExamsService } from '../../../services/student-exams-service';
 import { RouterLink } from '@angular/router';
+import { ILoginData } from '../../../models/User/ilogin-data';
+import { StorageService } from '../../../services/storageservice';
 
 @Component({
   selector: 'app-stu-dashboard',
@@ -12,12 +14,17 @@ export class StuDashboard implements OnInit {
   availableStudentExams: any[] = [];
   takenExams: any[] = [];
   pendingExams: number = 0;
+  userData: ILoginData | null = null;
+  userName: string = '';
 
   constructor(
+    private storageService: StorageService,
     private studentExamsService: StudentExamsService,
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
+    this.userData = this.storageService.getUser();
+    this.userName = this.userData?.user?.name || '';
     this.studentExamsService.getStudentAvailableExams().subscribe({
       next: (data) => {
         this.availableStudentExams = data;
