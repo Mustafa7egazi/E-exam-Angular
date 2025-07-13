@@ -11,6 +11,9 @@ export class StudentCount {
 
   constructor(private http: HttpClient) { }
   getStudentCount(): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/count`);
+    return this.http.get<number>(`${this.baseUrl}/CountOfStudents`);
+  }
+  getStudentTryExamCount(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/CountOfTryExam`);
   }
 }

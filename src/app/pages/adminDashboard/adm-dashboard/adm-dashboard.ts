@@ -16,6 +16,7 @@ export class AdmDashboard implements OnInit, OnDestroy {
   exams: IExamList[] = [];
   totalExams: number = 0;
   studentCount: number = 0;
+  studentTryExamCount: number = 0;
   private subscription!: Subscription;
   selectedExam!: IExamDetails | null;
   constructor(
@@ -45,6 +46,7 @@ export class AdmDashboard implements OnInit, OnDestroy {
       },
     });
     this.getStudentCount();
+    this.getStudentTryExamCount();
   }
 
   ngOnDestroy(): void {
@@ -67,6 +69,14 @@ export class AdmDashboard implements OnInit, OnDestroy {
     this.studentCountService.getStudentCount().subscribe({
       next: (data) => {
         this.studentCount = data;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+  getStudentTryExamCount() {
+    this.studentCountService.getStudentTryExamCount().subscribe({
+      next: (data) => {
+        this.studentTryExamCount = data;
         this.cdr.detectChanges();
       },
     });
