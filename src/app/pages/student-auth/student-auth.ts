@@ -32,12 +32,6 @@ export class StudentAuth {
     email: new FormControl<string>('', Validators.required),
     password: new FormControl<string>('', Validators.required),
     confirmPassword: new FormControl<string>('', Validators.required),
-    // firstName: new FormControl<string>(''),
-    // lastName: new FormControl<string>(''),
-    // dateOfBirth: new FormControl<Date>(new Date(2000, 0, 1)),
-    // email: new FormControl<string>('',),
-    // password: new FormControl<string>('',),
-    // confirmPassword: new FormControl<string>('',)
   });
 
   loginForm: FormGroup = new FormGroup({
