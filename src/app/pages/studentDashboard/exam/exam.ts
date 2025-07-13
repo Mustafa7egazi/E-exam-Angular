@@ -9,6 +9,7 @@ import {
   IExamQuestion,
   IExamAnswer,
 } from '../../../models/Exam/iexam-list';
+import { StorageService } from '../../../services/storageservice';
 
 @Component({
   selector: 'app-exam',
@@ -18,7 +19,7 @@ import {
 })
 export class Exam implements OnInit, OnDestroy {
   examId: number = 0;
-  studentId: number = 1; // This should come from authentication service
+  studentId: number = 0; // This should come from authentication service
   examDetails: IExamDetails | null = null;
   questions: IExamQuestion[] = [];
   currentQuestionIndex: number = 0;
@@ -34,13 +35,15 @@ export class Exam implements OnInit, OnDestroy {
     private router: Router,
     private studentExamsService: StudentExamsService,
     private cdr: ChangeDetectorRef,
-    private examService: Examservice
+    private examService: Examservice,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
     this.examId = Number(this.route.snapshot.paramMap.get('id'));
     console.log('Loading exam with ID:', this.examId);
 
+    this.studentId = this.storageService.getUser()?.user?.id || 0;
     // Load exam directly without API connection test
     this.loadExam();
   }
@@ -242,6 +245,7 @@ export class Exam implements OnInit, OnDestroy {
         next: (result) => {
           this.isSubmitting = false;
           // Navigate to exam results with the result data
+          this.cdr.detectChanges();
           this.router.navigate(['/student-dashboard'], {
             state: { examResult: result, examDetails: this.examDetails },
           });

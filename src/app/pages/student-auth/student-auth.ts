@@ -53,9 +53,10 @@ export class StudentAuth {
         next: (response) => {
           // Handle successful registration, e.g., navigate to login page or show a success message
           this.chr.detectChanges();
-          this.router.navigate(['/student-auth/login']);
+          this.router.navigate(['student/login']);
         },
         error: (error) => {
+          console.log(this.userInput);
           console.error('Registration failed', error);
         },
       });

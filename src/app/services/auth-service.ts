@@ -18,8 +18,8 @@ import { StorageService } from './storageservice';
   providedIn: 'root',
 })
 export class AuthService {
-  // baseUrl = `${environment.apiBaseUrl}${environment.endpoints.auth}`;
-  baseUrl = 'http://localhost:5000/api/auth';
+   baseUrl = `${environment.apiBaseUrl}${environment.endpoints.auth}`;
+  //baseUrl = 'http://localhost:5000/api/auth';
 
   constructor(private http: HttpClient) {}
 

@@ -1,13 +1,21 @@
 <nav class="navbar py-3 navbar-expand-lg bg-white">
   <div class="container">
-    <a href="" class="navbar-brand fw-bolder"><i class="fa-solid fa-graduation-cap me-1"></i>Gradely</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a href="" class="navbar-brand fw-bolder"
+      ><i class="fa-solid fa-graduation-cap me-1"></i>Gradely</a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
         @if(userData?.user) {
         <li class="nav-item me-1 mb-1">
           <button type="button" class="btn btn-primary">
@@ -15,15 +23,28 @@
             {{ userName}}
           </button>
         </li>
+
         <li class="nav-item me-1 mb-1">
-          <a class="btn btn-primary" (click)="logout()">Logout <i class="fa-solid fa-right-from-bracket"></i></a>
+          <a class="btn btn-primary" (click)="logout()"
+            >Logout <i class="fa-solid fa-right-from-bracket"></i
+          ></a>
         </li>
         }@else{
         <li class="nav-item me-1 mb-1">
-          <a class="nav-link fw-medium me-2" routerLink="/student/login" routerLinkActive="active">Login</a>
+          <a
+            class="nav-link fw-medium me-2"
+            routerLink="/student/login"
+            routerLinkActive="active"
+            >Login</a
+          >
         </li>
         <li class="nav-item me-1 mb-1">
-          <a class="btn btn-primary" routerLink="/student/register" routerLinkActive="active">Register</a>
+          <a
+            class="btn btn-primary"
+            routerLink="/student/register"
+            routerLinkActive="active"
+            >Register</a
+          >
         </li>
         }
       </ul>

@@ -42,7 +42,7 @@ export class StuDashboard implements OnInit {
       },
     });
 
-    this.studentExamsService.getAllTakenExams(1).subscribe({
+    this.studentExamsService.getAllTakenExams(this.userData?.user?.id || 0).subscribe({
       next: (data) => {
         this.takenExams = data;
         this.takenExamsLoaded = true;
@@ -80,7 +80,7 @@ export class StuDashboard implements OnInit {
   }
 
   viewResult(examId: number): void {
-    const studentId = 1; // TODO: Replace with actual student ID from auth
+    const studentId = this.userData?.user?.id || 0; // TODO: Replace with actual student ID from auth
     this.studentExamsService
       .getExamResultWithAnswers(examId, studentId)
       .subscribe({
