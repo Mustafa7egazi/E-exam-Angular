@@ -21,7 +21,9 @@
               </div>
               <div class="ms-3">
                 <p class="fs-6 fw-medium text-secondary mb-0">Total Exams</p>
-                <p class="fs-3 fw-bold text-dark mb-0">{{availableStudentExams.length}}</p>
+                <p class="fs-3 fw-bold text-dark mb-0">
+                  {{availableStudentExams.length}}
+                </p>
               </div>
             </div>
           </div>
@@ -97,25 +99,31 @@
           </div>
           <div class="card-body p-4">
             <div class="d-grid gap-3">
-
-             
-               @for (exam of availableStudentExams; track exam.id) {
-                <div class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100">
+              @if (availableExamsLoaded && takenExamsLoaded) { @for (exam of
+              availableStudentExams; track exam.id) {
+              <div
+                class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100"
+              >
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="flex-grow-1">
                     <div class="d-flex align-items-center mb-2">
                       <i data-lucide="play" class="text-success exam-icon"></i>
                       <h3 class="fs-6 fw-semibold text-dark mb-0">
-                       {{exam.name}}
+                        {{exam.name}}
                       </h3>
                       @if (exam.isPublished) {
-                        <span class="badge rounded-pill bg-success-subtle text-success ms-3">available</span>
+                      <span
+                        class="badge rounded-pill bg-success-subtle text-success ms-3"
+                        >available</span
+                      >
                       }
                     </div>
-                    <div class="d-flex flex-wrap align-items-center gap-3 text-sm text-secondary">
+                    <div
+                      class="d-flex flex-wrap align-items-center gap-3 text-sm text-secondary"
+                    >
                       <span class="d-flex align-items-center">
                         <i data-lucide="book-open" class="detail-icon"></i>
-                       {{exam.subject}}
+                        {{exam.subject}}
                       </span>
                       <span class="d-flex align-items-center">
                         <i data-lucide="clock" class="detail-icon"></i>
@@ -125,12 +133,32 @@
                     </div>
                   </div>
                   <div class="ms-3">
-                    <a routerLink="/student/exams/{{exam.id}}" class="btn btn-primary">Start Exam</a>
+                    @if (isExamTaken(exam.id)) {
+                    <button
+                      class="btn btn-secondary"
+                      (click)="viewResult(exam.id)"
+                    >
+                      View Result
+                    </button>
+                    } @else {
+                    <a
+                      routerLink="/student/exams/{{exam.id}}"
+                      class="btn btn-primary"
+                      >Start Exam</a
+                    >
+                    }
                   </div>
                 </div>
               </div>
+              } } @else {
+              <div class="text-center p-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-secondary">Loading exams...</p>
+              </div>
               }
-     
+
               <!-- <div class="bg-light rounded-lg p-4 transition-colors hover-bg-gray-100">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="flex-grow-1">

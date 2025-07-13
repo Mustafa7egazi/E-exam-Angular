@@ -42,4 +42,10 @@ export class StudentExamsService {
       { answers }
     );
   }
+
+  getExamResultWithAnswers(examId: number, studentId: number): Observable<any> {
+    return this.HttpClient.get<any>(
+      `${this.baseUrl}/Student/${studentId}/exams/${examId}/answers`
+    );
+  }
 }

@@ -1,6 +1,6 @@
+@if (examResult && examDetails) {
 <div
   class="min-vh-100 bg-light d-flex align-items-center justify-content-center"
-  *ngIf="examResult && examDetails"
 >
   <div class="container">
     <div class="row justify-content-center">
@@ -15,14 +15,14 @@
               ></i>
             </div>
             <h2 class="fs-3 fw-bold text-dark mb-2">Exam Completed!</h2>
-            <p class="text-secondary mb-0">{{ examDetails.name }}</p>
+            <p class="text-secondary mb-0">{{ examDetails?.name }}</p>
           </div>
 
           <div class="row g-4 mb-4">
             <div class="col-6">
               <div class="text-center p-3 bg-light rounded-lg">
                 <h4 class="fs-4 fw-bold text-primary mb-1">
-                  {{ examResult.score || 0 }}
+                  {{ examDetails?.score || 0 }}
                 </h4>
                 <p class="text-secondary small mb-0">Score</p>
               </div>
@@ -30,11 +30,41 @@
             <div class="col-6">
               <div class="text-center p-3 bg-light rounded-lg">
                 <h4 class="fs-4 fw-bold text-success mb-1">
-                  {{ examDetails.totalMarks }}
+                  {{ examDetails?.totalScore }}
                 </h4>
                 <p class="text-secondary small mb-0">Total Marks</p>
               </div>
             </div>
+          </div>
+
+          <div class="mb-4">
+            <h4 class="fs-5 fw-semibold text-dark mb-3">Your Answers</h4>
+            @if (questionsWithAnswers && questionsWithAnswers.length > 0) { @for
+            (answer of questionsWithAnswers; track answer.questionId) {
+            <div class="mb-3 p-3 bg-light rounded-lg">
+              <div class="fw-bold mb-2">{{ answer.questionTitle }}</div>
+              <div class="mb-1">
+                <strong>Your Answer:</strong> {{ answer.selectedOptionTitle }}
+              </div>
+              <div class="mb-1"><strong>Score:</strong> {{ answer.mark }}</div>
+              <div>
+                <span
+                  [ngClass]="answer.isCorrect ? 'text-success' : 'text-danger'"
+                  class="fw-bold"
+                >
+                  {{ answer.isCorrect ? '✓ Correct' : '✗ Incorrect' }}
+                </span>
+
+                <span class="fw-bold d-block">
+                  Correct Answer: {{ answer.correctAnswer }}
+                </span>
+              </div>
+            </div>
+            } } @else {
+            <div class="text-center p-3">
+              <p class="text-secondary">No answers available</p>
+            </div>
+            }
           </div>
 
           <div class="d-grid">
@@ -52,12 +82,9 @@
     </div>
   </div>
 </div>
-
+} @else {
 <!-- Loading or Error State -->
-<div
-  class="min-vh-100 d-flex align-items-center justify-content-center"
-  *ngIf="!examResult"
->
+<div class="min-vh-100 d-flex align-items-center justify-content-center">
   <div class="text-center">
     <div class="spinner-border text-primary mb-3" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -65,3 +92,4 @@
     <h4 class="text-secondary">Loading Results...</h4>
   </div>
 </div>
+}

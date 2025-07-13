@@ -242,7 +242,7 @@ export class Exam implements OnInit, OnDestroy {
         next: (result) => {
           this.isSubmitting = false;
           // Navigate to exam results with the result data
-          this.router.navigate(['/student/exam-results'], {
+          this.router.navigate(['/student-dashboard'], {
             state: { examResult: result, examDetails: this.examDetails },
           });
         },
