@@ -54,18 +54,20 @@ E-exam-Angular/
 ├── public/                     # Static assets (e.g., favicon.ico, index.html)
 ├── src/                        # Main application source code
 │   ├── app/                    # Contains the root module, components, services, and routing
-│   │   ├── components/         # Reusable UI components
-│   │   ├── services/           # Data fetching and business logic services
-│   │   ├── modules/            # Feature modules (if any)
-│   │   ├── app-routing.module.ts # Routing configuration
-│   │   ├── app.component.ts    # Root component logic
-│   │   ├── app.component.html  # Root component template
-│   │   ├── app.component.css   # Root component styles
-│   ├── assets/                 # Static assets (images, fonts, etc.)
-│   ├── environments/           # Environment-specific configs
+│   │   ├── Pipes/              # Custom pipes used across the application
+│   │   ├── environment/        # Environment configuration files
+│   │   ├── layout/             # Shared layout components (headers, footers, etc.)
+│   │   ├── models/             # TypeScript interfaces and models
+│   │   ├── pages/              # Main views/pages (dashboard, exams, login, etc.)
+│   │   ├── services/           # Injectable services for data/API handling
+│   │   ├── app.config.ts       # Application-wide configuration settings
+│   │   ├── app.css             # Global styles
+│   │   ├── app.html            # Main HTML template
+│   │   ├── app.routes.ts       # Routing module for the application
+│   │   ├── app.spec.ts         # Unit tests for the root component
+│   │   └── app.ts              # Root module/component
 │   ├── index.html              # Main HTML entry point
 │   ├── main.ts                 # App bootstrap entry
-│   ├── polyfills.ts            # Browser compatibility
 │   ├── styles.css              # Global styles
 ├── angular.json                # Angular CLI config
 ├── package.json                # Project dependencies
